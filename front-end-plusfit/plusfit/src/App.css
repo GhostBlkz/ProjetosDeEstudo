@@ -1,0 +1,10 @@
+body{
+  padding: 0;
+  margin: 0;
+  background-image: url('C:\Users\adria\Desktop\Programas\Java\Projetos de Estudo\front-end-plusfit\plusfit\src\assets\logoGigantes1.png'); /* Substitua pelo caminho da sua imagem */
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Isso garante que a imagem de fundo permaneça fixa enquanto a página é rolada */
+  background-color: rgba(9, 23, 29, 0); /* Cor de fundo com opacidade */
+  background-position: center;
+}
