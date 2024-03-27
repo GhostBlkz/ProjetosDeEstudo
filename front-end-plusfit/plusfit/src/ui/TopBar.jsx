@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import logo from '../assets/logoGigantes2.png';
 import MainMenu from './MainMenu'
 import Login from './Login';
+import Login2 from './Login2';
 
 export default function TopBar() {
   const [openLogin, setOpenLogin] = React.useState(false)
@@ -35,7 +36,7 @@ export default function TopBar() {
           <Button color="inherit" onClick={handleLoginClick}>Login</Button>
         </Toolbar>
       </AppBar>
-      {openLogin && <Login/>} {/*se open login for true renderiza componente login*/}
+      {openLogin && <Login2/>} {/*se open login for true renderiza componente login*/}
     </Box>
   );
 }

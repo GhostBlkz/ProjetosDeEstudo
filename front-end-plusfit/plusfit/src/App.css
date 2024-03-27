@@ -8,3 +8,10 @@ body{
   background-color: rgba(9, 23, 29, 0); /* Cor de fundo com opacidade */
   background-position: center;
 }
+
+.Login2{
+  text-align: center;
+  width: 350px;
+  margin: 0 auto;
+  margin-top: 30px;
+}
