@@ -1,5 +1,14 @@
 import React, {useState} from 'react'
-import { TextField, FormControl, Input, InputAdornment, InputLabel, IconButton, Button, Chip } from '@mui/material'
+import { 
+    TextField, 
+    FormControl, 
+    Input, 
+    InputAdornment, 
+    InputLabel, 
+    IconButton, 
+    Button,  
+    Alert,
+    Stack } from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoginIcon from '@mui/icons-material/Login';
@@ -24,17 +33,39 @@ export default function FormSignup() {
     const [usernameInput, setUsernameInput] = useState('')
     const [emailInput, setEmailInput] = useState('')
     const [passwordInput, setPasswordInput] = useState('')
+    const [passwordConfirmationInput, setPasswordConfirmationInput] = useState('')
+
 
     // validaçao do form
-    const [formValid, setFormValid] = useState('');
-    const [success, setSuccess] = useState('');
+    const [formValid, setFormValid] = useState()
+    const [sucess, setSucess] = useState()
+    
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        setSucess(null)
 
         if(usernameError || !usernameInput){
             setFormValid("Usuario deve conter 5 a 15 caracters")
+            return
         }
+        if(emailError || !emailInput){
+            setFormValid("Email invalido")
+            return
+        }
+        if(passwordError || !passwordInput){
+            setFormValid("senha deve ter entre 5 e 20 caracteres")
+            return
+        }
+
+        if(passwordConfirmationError || !passwordConfirmationInput){
+            setFormValid("As senhas devem combinar")
+            return
+        }
+
+        setFormValid(null)
+        setSucess('Conta criada')
+
 
 
         console.log(usernameInput)
@@ -48,24 +79,25 @@ export default function FormSignup() {
     const [usernameError, setUsernameError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [passwordConfirmationError, setPasswordConfirmationError] = useState(false);
+
 
     
     //Validation para onBlur Username
-    const handleUsername = () =>{
-        if(!usernameInput|| usernameInput.length < 5 || usernameInput.length > 20 ){ 
-            setUsernameError(true)
+    const handleUsername = () => {
+        if(usernameInput.length == 0 || usernameInput.length < 5 || usernameInput.length > 20 ){ 
+            setUsernameError(true);
             
-            return
+            return;
         }
         setUsernameError(false) // retorna a cor normal caso o usuario digitou a quantidade certa
     }
 
     //Validation para onBlur Email
     const handleEmail = () =>{
-        console.log(isEmail(emailInput))
         if(!isEmail(emailInput)){
             setEmailError(true)
-            return
+            return;
         }
         setEmailError(false) // retorna a cor normal caso o email seja valido
     }
@@ -79,6 +111,15 @@ export default function FormSignup() {
             setPasswordError(false)
     }
 
+    // validation para onblur password
+    const handlePasswordConfirmation = () =>{
+        if(!passwordConfirmationInput|| passwordConfirmationInput != passwordInput ){
+            setPasswordConfirmationError(true)
+            return
+        }
+        setPasswordConfirmationError(false)
+    }
+
     return (
         <div>
             
@@ -86,7 +127,7 @@ export default function FormSignup() {
                 <TextField
                     id='standard-basic1'
                     error={usernameError}
-                    label="Username"
+                    label="Nome de usuário"
                     value={usernameInput}
                     onChange={(event) => setUsernameInput(event.target.value)}
                     onBlur={handleUsername}
@@ -99,7 +140,7 @@ export default function FormSignup() {
                 <TextField
                     id='standard-basic2'
                     error={emailError}
-                    label="Email"
+                    label="E-mail"
                     value={emailInput}
                     onChange={(event) => setEmailInput(event.target.value)}
                     onBlur={handleEmail}
@@ -134,6 +175,33 @@ export default function FormSignup() {
                         }
                     />
                 </FormControl>
+                        </p>
+                        <p>
+                <FormControl sx={{ width: '100%' }} variant="standard">
+                    <InputLabel error={passwordError} htmlFor="standard-adornment-password">
+                        Confirme a Senha
+                    </InputLabel>
+                    <Input
+                        fullWidth
+                        error={passwordConfirmationError}
+                        id="standard-adornment-password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={passwordConfirmationInput}
+                        onBlur={handlePasswordConfirmation}
+                        onChange={(event) => setPasswordConfirmationInput(event.target.value)}
+                        endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                </FormControl>
             </p>
             <p>
                 <Button onClick={handleSubmit} fullWidth variant="contained" endIcon={<LoginIcon/>}>
@@ -141,7 +209,14 @@ export default function FormSignup() {
                 </Button>
             </p>
             <p>
-                {formValid && <p>{formValid}</p>}
+                {formValid && (<Alert  severity="error">
+                    {formValid}
+                    </Alert>)}
+            </p>
+            <p>
+                {sucess && (<Alert  severity="success">
+                    {sucess}
+                    </Alert>)}
             </p>
         </div>
     )

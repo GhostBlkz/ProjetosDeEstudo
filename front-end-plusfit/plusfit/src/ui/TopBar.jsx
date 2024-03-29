@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import logo from '../assets/logoGigantes2.png';
 import MainMenu from './MainMenu'
-import Login from './Login';
+
 import Login2 from './Login2';
 
 export default function TopBar() {
@@ -20,15 +20,6 @@ export default function TopBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" enableColorOnDark>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
           <MainMenu />
           <Box sx={{ flexGrow: 1 }}>
             <img src={logo} alt="Logotipo Gigantes" style={{ width: '250px ', margin: '10px'}} />

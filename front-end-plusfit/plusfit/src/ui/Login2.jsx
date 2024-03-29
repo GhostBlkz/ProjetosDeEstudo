@@ -16,13 +16,13 @@ function Login2() {
     }
     return (
         <div className='Login2'>
-            <Paper elevation={3} style={{ padding: '10px', width: 350, margin: "20px auto" }}>
+            <Paper elevation={6} style={{ padding: '10px', width: 350, margin: "60% auto" }}>
                 <div align="center">
                    
                     {checked ? (
                         <Chip
                             id = "chip2"
-                            label="Log in"
+                            label="Entrar"
                             color='primary'
                             variant='outlined'
                             icon={<LockIcon />}

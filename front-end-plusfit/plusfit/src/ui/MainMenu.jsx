@@ -1,7 +1,8 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
+import { IconButton } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export default function MainMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -15,16 +16,19 @@ export default function MainMenu() {
 
   return (
     <div>
-      <Button
-        id="basic-button"
-        color="secondary"
+      <IconButton
+        size="large"
+        edge="start"
+        color="inherit"
+        aria-label="menu"
+        sx={{ mr: 2 }}
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        Cliente
-      </Button>
+        <MenuIcon />
+      </IconButton>
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
