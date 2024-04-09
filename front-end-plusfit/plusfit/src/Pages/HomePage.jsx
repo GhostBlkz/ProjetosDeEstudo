@@ -5,7 +5,7 @@ import TopBar from '../ui/TopBar'
 export default function HomePage() {
   return (
     <>
-
+    
     </>
   )
 }
