@@ -13,7 +13,9 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoginIcon from '@mui/icons-material/Login';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 
@@ -25,6 +27,8 @@ export default function FormLogin() {
 
     //Campo de senha
     const [showPassword, setShowPassword] = React.useState(false);
+    const {setAuthUser} = React.useContext(AuthUSerContext)
+    const navigate = useNavigate()
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -44,8 +48,8 @@ export default function FormLogin() {
     const [success, setSuccess] = useState()
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    async function handleSubmit (event) {
+        e.preventDefault() //impede o reload da pagina
         setSuccess(null)
 
 
@@ -61,7 +65,38 @@ export default function FormLogin() {
 
 
         setFormValid(null)
-        setSuccess("Entrou")
+        setSuccess(true)
+
+        if (success){ 
+            try {
+
+            const response = await myfetch.post('/users/login', {email, password})
+            //console.log(response)
+    
+            //armazena o token no localStorage (Inseguro isso é provisorio)
+            window.localStorage.setItem(import.meta.env.VITE_AUTH_TOKEN_NAME, response. token)
+    
+           // armazena as informações do usuario autenticado no contexto
+           //AuthUserContext
+           setAuthUser(response.user)
+    
+    
+            //Mostra notificação de sucesso
+           
+            //TODO: redirecionar para homePage
+        }
+        catch(error){
+            console.error(error)
+    
+            //Mostra a Notificação de erro
+            setState({...state, showWaiting: false, notif: {
+                show:true,
+                message: error.message,
+                severity: 'error',
+                timeout: 4000
+            }})
+        }
+    }
 
 
 
@@ -104,7 +139,7 @@ export default function FormLogin() {
 
     return (
         <div>
-
+            <form>
             <p>
                 <TextField
                     id='standard-basic2'
@@ -151,6 +186,7 @@ export default function FormLogin() {
                     Entrar
                 </Button>
             </p>
+            </form>
             
                 {formValid && (<Alert severity="error">
                     {formValid}
