@@ -4,6 +4,8 @@ import AuthUSerContext from "../Contexts/AuthUserContext";
 import { Link } from "react-router-dom";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
+//controla o contexto global para saber se o usuario esta logado ou nao
+
 export default function AuthControl() {
     const { authUser } = React.useContext(AuthUSerContext)
 

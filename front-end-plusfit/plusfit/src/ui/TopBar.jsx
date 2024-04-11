@@ -5,10 +5,10 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import logo from '../assets/logoGigantes2.png';
-import MainMenu from './MainMenu'
+import logo from "../assets/logoGigantes2.png";
+import MainMenu from '../ui/MainMenu'
+import LoginPage from '../Pages/LoginPage';
 
-import Login2 from './Login2';
 
 export default function TopBar() {
   const [openLogin, setOpenLogin] = React.useState(false)
@@ -27,7 +27,7 @@ export default function TopBar() {
           <Button color="inherit" onClick={handleLoginClick}>Login</Button>
         </Toolbar>
       </AppBar>
-      {openLogin && <Login2/>} {/*se open login for true renderiza componente login*/}
+      {openLogin && <LoginPage/>} {/*se open login for true renderiza componente login*/}
     </Box>
   );
 }

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Paper, Chip, Switch } from '@mui/material'
-import FormSignup from './FormControl/signup';
-import FormLogin from './FormControl/login';
+import FormSignup from '../FormControl/signup';
+import FormLogin from '../FormControl/login';
 import FaceIcon from '@mui/icons-material/Face';
 import LockIcon from '@mui/icons-material/Lock';
-import './Login.css'
 
-function Login2() {
+
+function LoginPage() {
 
     const [checked, setChecked] = useState(true)
 
@@ -15,8 +15,8 @@ function Login2() {
         setChecked(event.target.checked);
     }
     return (
-        <div className='Login2'>
-            <Paper elevation={6} style={{ padding: '10px', width: 350, margin: "60% auto" }}>
+        <div className='LoginPage'>
+            <Paper elevation={6} style={{ padding: '10px', width: 350, margin: "10% auto" }}>
                 <div align="center">
                    
                     {checked ? (
@@ -51,4 +51,4 @@ function Login2() {
     )
 }
 
-export default Login2
+export default LoginPage

@@ -1,10 +1,10 @@
 import Typography from '@mui/material/Typography'
 
 
-export default function HomePage() {
+export default function CustomTraingPage() {
   return (
     <>
-      <Typography variant="h1">
+      <Typography variant="h5">
         crie o treino
 
       </Typography>

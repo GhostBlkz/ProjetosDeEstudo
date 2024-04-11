@@ -41,7 +41,7 @@ export default function FormSignup() {
     const [sucess, setSucess] = useState()
     
 
-    async function handleSubmit (event) {
+    async function handleSubmit (e) {
         e.preventDefault()
         setSucess(null)
 
