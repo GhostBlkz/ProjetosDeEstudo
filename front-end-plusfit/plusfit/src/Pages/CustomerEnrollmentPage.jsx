@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 export default function CustomerEnrollmentPage() {
   return (
     <>
-      <Typography variant="h1">
+      <Typography variant="h3">
         Matricule o cliente
 
       </Typography>

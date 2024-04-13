@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 export default function HomePage() {
   return (
     <>
-      <Typography variant="h5">
+      <Typography variant="h3">
         Pagina inicial
 
       </Typography>

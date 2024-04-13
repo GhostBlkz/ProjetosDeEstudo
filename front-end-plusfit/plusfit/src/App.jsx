@@ -16,6 +16,7 @@ import AppRoutes from './routes/AppRoutes';
 import { BrowserRouter } from 'react-router-dom'
 import AuthUSerContext from './Contexts/AuthUserContext';
 import myfetch from './lib/myfetch';
+import FooterBar from './ui/FooterBar';
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
           <Box sx={{ margin: '24px 24px 72px 24px' }}>
             <AppRoutes />
           </Box>
-
+          <FooterBar />
         </BrowserRouter>
       </ThemeProvider>
     </>

@@ -1,16 +1,22 @@
 import {createTheme} from '@mui/material/styles'
-import {lightBlue, lightGreen} from '@mui/material/colors'
+import {blue, pink} from '@mui/material/colors'
 
 const theme = createTheme({
     palette: {
         mode: 'light',
         primary: { //cor primaria
-            main: lightBlue[300]
+            main: blue[500]
         },
         secondary: { //cor secundaria
-            main: lightGreen[200]
+            main: pink[200]
         }
-    }
+    },
+    typography: {
+        h1: {
+          fontSize: '30pt',
+          fontWeight: 'bold'
+        }
+      }
 })
 
 export default theme

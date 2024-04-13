@@ -3,6 +3,7 @@ import { IconButton } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MenuIcon from '@mui/icons-material/Menu';
+import {Link} from 'react-router-dom'
 
 export default function MainMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,11 +39,15 @@ export default function MainMenu() {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>Cadastrar </MenuItem>
-        <MenuItem onClick={handleClose}>Atualizar/Inativar </MenuItem>
-        <MenuItem onClick={handleClose}>Criar Ficha de Treino</MenuItem>
-
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <MenuItem onClick={handleClose} component={Link} to="/">
+          Pagina Inicial
+          </MenuItem>
+        <MenuItem onClick={handleClose} component={Link} to="/cadastrar_cliente">
+          Cadastrar/Atualizar Cliente
+          </MenuItem>
+        <MenuItem onClick={handleClose} component={Link} to="/criar_ficha">
+          Criar Fichas de Treino
+          </MenuItem>
       </Menu>
     </div>
   );
