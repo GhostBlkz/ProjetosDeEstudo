@@ -7,11 +7,11 @@ import {
     InputLabel, 
     IconButton, 
     Button,  
-    Alert,
-    Stack } from '@mui/material'
+    Alert} from '@mui/material'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoginIcon from '@mui/icons-material/Login';
+import Waiting from '../ui/Waiting';
 import axios from 'axios'
 
 // Email Validation
@@ -39,8 +39,17 @@ export default function FormSignup() {
     // validaçao do form
     const [formValid, setFormValid] = useState()
     const [sucess, setSucess] = useState()
+
+    //mensagens de erro
     const [ErroSuporte, setErroSuporte] = useState()
     const [ErroMessage, setErroMessage] = useState()
+
+    //Backdrop de espera
+    const [state, setState] = React.useState({
+        showWaiting: false 
+    })
+    const {showWaiting} = state
+
     
 
     async function handleSubmit (e) {
@@ -67,12 +76,7 @@ export default function FormSignup() {
         }
 
         setFormValid(null)
-
-
-
-        console.log(usernameInput)
-        console.log(emailInput)
-        console.log(passwordInput)
+        
 
         // Declarar uma nova variável dados com state e atribuir o objeto
         const data = {
@@ -90,14 +94,20 @@ export default function FormSignup() {
         };
 
         // Fazer a requisição para o servidor utilizando axios, indicando o método da requisição, o endereço, enviar os dados do formulário e o cabeçalho
+        
+        setState({...state, showWaiting: true})
         axios.post('http://localhost:8080/admin', data, headers)
-            .then((response) => { // Acessa o then quando a API retornar status 200
+        
+        .then((response) => { // Acessa o then quando a API retornar status 200
+
                 // Atribuir a mensagem no state message
                 //console.log(response.data.mensagem);
 
                 // Limpar os dados do state e os dados dos campos do formulário
 
                 setSucess("Conta criada com sucesso");
+                setState({...state, showWaiting: false})
+
             }).catch((err) => { // Acessa o catch quando a API retornar erro
                 console.log('Log de erro: ' + err)
 
@@ -105,11 +115,15 @@ export default function FormSignup() {
                 //console.log(err.response.data.mensagem);
                 if (err.response) {
                     setErroMessage("err.response.data.mensagem")
+                    setState({...state, showWaiting: false})
+
                 } else {
                     setErroSuporte("err");
+                    setState({...state, showWaiting: false})
+
                 }
             });
-
+            
     }
 
     // Input Error 
@@ -159,7 +173,7 @@ export default function FormSignup() {
 
     return (
         <div>
-            
+            <Waiting show= {showWaiting}/>
             <p>
                 <TextField
                     id='standard-basic1'
@@ -245,28 +259,28 @@ export default function FormSignup() {
                     Cadastrar
                 </Button>
             </p>
-            <p>
+            
                 {formValid && (<Alert  severity="error">
                     {formValid}
                     </Alert>)}
-            </p>
-            <p>
+           
+            
                 {sucess && (<Alert  severity="success">
                     {sucess}
                     </Alert>)}
-            </p>
+            
 
-            <p>
+            
                 {ErroSuporte===("err") && (<Alert  severity="error">
                    Erro entre em contato com o <a href="mailto:adriano.silva187@fatec.sp.gov.br">Suporte</a>
                     </Alert>)}
-            </p>
+           
 
-            <p>
+            
                 {ErroMessage && (<Alert  severity="error">
                     {ErroMessage}
                     </Alert>)}
-            </p>
+            
         </div>
     )
 }

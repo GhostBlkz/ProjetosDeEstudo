@@ -128,9 +128,21 @@ export default function FormLogin() {
 
 
 
+        // Declarar uma nova variável dados com state e atribuir o objeto
+        const data = {
+            email: emailInput,
+            passWord: passwordInput
+        }
 
-        console.log(emailInput)
-        console.log(passwordInput)
+        const headers = {
+            'headers': {
+                // Indicar que será enviado os dados em formato de objeto
+                'Content-Type': 'application/json'
+            }
+        }
+
+        
+
 
 
     }
