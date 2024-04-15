@@ -12,7 +12,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LoginIcon from '@mui/icons-material/Login';
-
+import axios from 'axios'
 
 // Email Validation
 const isEmail = (email) => //função que valida emails
@@ -39,9 +39,12 @@ export default function FormSignup() {
     // validaçao do form
     const [formValid, setFormValid] = useState()
     const [sucess, setSucess] = useState()
+    const [ErroSuporte, setErroSuporte] = useState()
+    const [ErroMessage, setErroMessage] = useState()
     
 
     async function handleSubmit (e) {
+
         e.preventDefault()
         setSucess(null)
 
@@ -64,7 +67,6 @@ export default function FormSignup() {
         }
 
         setFormValid(null)
-        setSucess('Conta criada')
 
 
 
@@ -72,6 +74,41 @@ export default function FormSignup() {
         console.log(emailInput)
         console.log(passwordInput)
 
+        // Declarar uma nova variável dados com state e atribuir o objeto
+        const data = {
+            userName: usernameInput,
+            email: emailInput,
+            passWord: passwordInput
+        };
+
+        // Criar a constante com os dados do cabeçalho
+        const headers = {
+            'headers': {
+                // Indicar que será enviado os dados em formato de objeto
+                'Content-Type': 'application/json'
+            }
+        };
+
+        // Fazer a requisição para o servidor utilizando axios, indicando o método da requisição, o endereço, enviar os dados do formulário e o cabeçalho
+        axios.post('http://localhost:8080/admin', data, headers)
+            .then((response) => { // Acessa o then quando a API retornar status 200
+                // Atribuir a mensagem no state message
+                //console.log(response.data.mensagem);
+
+                // Limpar os dados do state e os dados dos campos do formulário
+
+                setSucess("Conta criada com sucesso");
+            }).catch((err) => { // Acessa o catch quando a API retornar erro
+                console.log('Log de erro: ' + err)
+
+                // Atribuir a mensagem no state message
+                //console.log(err.response.data.mensagem);
+                if (err.response) {
+                    setErroMessage("err.response.data.mensagem")
+                } else {
+                    setErroSuporte("err");
+                }
+            });
 
     }
 
@@ -216,6 +253,18 @@ export default function FormSignup() {
             <p>
                 {sucess && (<Alert  severity="success">
                     {sucess}
+                    </Alert>)}
+            </p>
+
+            <p>
+                {ErroSuporte===("err") && (<Alert  severity="error">
+                   Erro entre em contato com o <a href="mailto:adriano.silva187@fatec.sp.gov.br">Suporte</a>
+                    </Alert>)}
+            </p>
+
+            <p>
+                {ErroMessage && (<Alert  severity="error">
+                    {ErroMessage}
                     </Alert>)}
             </p>
         </div>
