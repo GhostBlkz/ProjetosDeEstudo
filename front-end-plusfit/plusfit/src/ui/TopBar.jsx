@@ -12,10 +12,9 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function TopBar() {
-  const [openLogin, setOpenLogin] = React.useState(false)
+  const [openLogin, setOpenLogin] = React.useState(true)
 
   const navigate = useNavigate()
-
   const handleLoginClick = () => {
     setOpenLogin(!openLogin) //seta open login para o inverso , se for true para falso, se for falso para true
    
