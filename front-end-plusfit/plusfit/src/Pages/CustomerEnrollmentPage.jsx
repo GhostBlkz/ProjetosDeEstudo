@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Typography, Paper, TextField, Grid, Button, Box, Alert } from '@mui/material'
+import { Typography, Paper, TextField, Grid, Button, Box, Alert, MenuItem } from '@mui/material'
 import CreateIcon from '@mui/icons-material/Create';
 import validaCPF from '../lib/ValidaCpf'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -23,7 +23,20 @@ export default function CustomerEnrollmentPage() {
   const [cpfError, setCpfError] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  
+  const genders = [
+    {
+      value: 'Male',
+      label: 'Masculino',
+    },
+    {
+      value: 'Female',
+      label: 'Feminino',
+    },
+    {
+      value: 'Other',
+      label: 'Outro',
+    }
+  ]
 
 
 
@@ -38,6 +51,7 @@ export default function CustomerEnrollmentPage() {
     zip_code: '',
     birthdate: null,
     email: '',
+    gender: ''
   });
 
   //lida com a validação do email
@@ -101,24 +115,24 @@ export default function CustomerEnrollmentPage() {
     window.location.href = "/"
   }
 
-//seta um timeout para o alert de erro
+  //seta um timeout para o alert de erro
   useEffect(() => {
     if (formValid) {
       const formValidTimeout = setTimeout(() => {
         setFormValid(false);
       }, 2000);
-      
+
       return () => clearTimeout(formValidTimeout);
     }
   }, [formValid]);
 
-//seta um timeout para o alert de sucesso
+  //seta um timeout para o alert de sucesso
   useEffect(() => {
     if (success) {
       const successTimeout = setTimeout(() => {
         setSuccess(false);
       }, 2000);
-      
+
       return () => clearTimeout(successTimeout);
     }
   }, [success]);
@@ -171,6 +185,62 @@ export default function CustomerEnrollmentPage() {
                   onBlur={handleCpf}
                   sx={{
                     borderRadius: 10,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <DatePicker
+                  name="birthdate"
+                  label="Data de Nascimento"
+                  inputVariant="outlined"
+                  fullWidth
+                  value={formData.birthdate}
+                  onChange={handleBirthdateChange}
+                  slotProps={<TextField variant='outlined' />}
+                  sx={{
+                    borderRadius: 10,
+                    width: 343
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <TextField
+                  name="gender"
+                  select
+                  label="Selecione seu genero"
+                  variant="outlined"
+                  defaultValue={""}
+                  value={formData.gender}
+                  onChange={handleChange}
+                  fullWidth
+                  sx={{
+                    borderRadius: 10,
+
+                  }}
+                >
+                  {genders.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
+              <Grid item xs={6} md={8}>
+                <TextField
+                  name="email"
+                  label="E-mail"
+                  variant="outlined"
+                  fullWidth
+                  error={emailError}
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={handleEmail}
+                  sx={{
+                    borderRadius: 10,
+
                   }}
                 />
               </Grid>
@@ -248,51 +318,23 @@ export default function CustomerEnrollmentPage() {
                 />
               </Grid>
 
-              <Grid item xs={6} md={4}>
-                <DatePicker
-                  name="birthdate"
-                  label="Data de Nascimento"
-                  inputVariant="outlined"
-                  fullWidth
-                  value={formData.birthdate}
-                  onChange={handleBirthdateChange}
-                  slotProps={<TextField variant='outlined' />}
-                  sx={{
-                    borderRadius: 10,
-                    width: 343
-                  }}
-                />
-              </Grid>
+              
 
-              <Grid item xs={6} md={8}>
-                <TextField
-                  name="email"
-                  label="E-mail"
-                  variant="outlined"
-                  fullWidth
-                  error={emailError}
-                  value={formData.email}
-                  onChange={handleChange}
-                  onBlur={handleEmail}
-                  sx={{
-                    borderRadius: 10,
+              
 
-                  }}
-                />
-              </Grid>
-
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, padding: '0 24px', mb: 3 }}>
-                <Button type="submit" onClick={handleSubmit} variant="contained" color="primary" sx={{ width: 'auto' }} endIcon={<CreateIcon />}>
-                  Cadastrar
-                </Button>
-                <Button variant="contained" onClick={handleVoltar} color="secondary" sx={{ width: 'auto', position: 'absolute', right: 400 }}>
-                  Voltar
-                </Button>
-              </Box>
-
-
+              
 
             </Grid>
+
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, padding: '0 24px', mb: 3 }}>
+              <Button type="submit" onClick={handleSubmit} variant="contained" color="primary" sx={{ width: 'auto' }} endIcon={<CreateIcon />}>
+                Cadastrar
+              </Button>
+              <Button variant="contained" onClick={handleVoltar} color="secondary" sx={{ width: 'auto', position: 'absolute', right: 400 }}>
+                Voltar
+              </Button>
+            </Box>
+
           </form>
           {formValid && (<Alert severity="error" sx={{ textAlign: 'center', margin: 'auto', width: '100%' }}>
             {formValid}
