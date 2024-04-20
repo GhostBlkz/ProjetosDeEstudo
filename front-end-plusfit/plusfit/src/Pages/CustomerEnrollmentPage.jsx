@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Typography, Paper, TextField, Grid, Button, Box, Alert } from '@mui/material'
 import CreateIcon from '@mui/icons-material/Create';
 import validaCPF from '../lib/ValidaCpf'
@@ -22,6 +22,8 @@ export default function CustomerEnrollmentPage() {
   const [emailError, setEmailError] = useState(false);
   const [cpfError, setCpfError] = useState(false)
   const [success, setSuccess] = useState(false)
+
+  
 
 
 
@@ -73,8 +75,9 @@ export default function CustomerEnrollmentPage() {
     }));
   };
 
+
   // Função para lidar com a submissão do formulário
-  async function handleSubmit (e) {
+  async function handleSubmit(e) {
     e.preventDefault();
 
     if (cpfError || !formData.idt_number) {
@@ -88,7 +91,7 @@ export default function CustomerEnrollmentPage() {
       setSuccess(false)
       return
     }
-    
+
     setSuccess(true)
     console.log(formData);
     console.log("Data de Nascimento formatada:", formData.birthdate ? dayjs(formData.birthdate).format('DD/MM/YYYY') : null);
@@ -97,7 +100,29 @@ export default function CustomerEnrollmentPage() {
   function handleVoltar() {
     window.location.href = "/"
   }
-  
+
+//seta um timeout para o alert de erro
+  useEffect(() => {
+    if (formValid) {
+      const formValidTimeout = setTimeout(() => {
+        setFormValid(false);
+      }, 2000);
+      
+      return () => clearTimeout(formValidTimeout);
+    }
+  }, [formValid]);
+
+//seta um timeout para o alert de sucesso
+  useEffect(() => {
+    if (success) {
+      const successTimeout = setTimeout(() => {
+        setSuccess(false);
+      }, 2000);
+      
+      return () => clearTimeout(successTimeout);
+    }
+  }, [success]);
+
   return (
 
     <>
@@ -231,7 +256,7 @@ export default function CustomerEnrollmentPage() {
                   fullWidth
                   value={formData.birthdate}
                   onChange={handleBirthdateChange}
-                  slotProps={<TextField variant='outlined'/>}
+                  slotProps={<TextField variant='outlined' />}
                   sx={{
                     borderRadius: 10,
                     width: 343
@@ -269,11 +294,11 @@ export default function CustomerEnrollmentPage() {
 
             </Grid>
           </form>
-          {formValid && (<Alert severity="error"  sx={{textAlign: 'center', margin: 'auto', width: '100%' }}>
+          {formValid && (<Alert severity="error" sx={{ textAlign: 'center', margin: 'auto', width: '100%' }}>
             {formValid}
           </Alert>)}
 
-          {success && (<Alert severity="success"  sx={{textAlign: 'center', margin: 'auto', width: '100%' }}>
+          {success && (<Alert severity="success" sx={{ textAlign: 'center', margin: 'auto', width: '100%' }}>
             {"Cadastro realizado com sucesso"}
           </Alert>)}
 
