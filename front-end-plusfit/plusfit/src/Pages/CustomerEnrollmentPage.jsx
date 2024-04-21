@@ -1,4 +1,5 @@
 import React from 'react'
+import InputMask from 'react-input-mask'
 import { useState, useEffect } from 'react';
 import { Typography, Paper, TextField, Grid, Button, Box, Alert, MenuItem } from '@mui/material'
 import CreateIcon from '@mui/icons-material/Create';
@@ -21,8 +22,10 @@ export default function CustomerEnrollmentPage() {
   const [formValid, setFormValid] = useState()
   const [emailError, setEmailError] = useState(false);
   const [cpfError, setCpfError] = useState(false)
+  const [erroGenerico, setErroGenerico] = useState(false)
   const [success, setSuccess] = useState(false)
 
+  //opções de seleção de genero
   const genders = [
     {
       value: 'Male',
@@ -37,6 +40,37 @@ export default function CustomerEnrollmentPage() {
       label: 'Outro',
     }
   ]
+  //opções de seleção de estado
+  const states = [
+    { value: 'AC', label: 'Acre' },
+    { value: 'AL', label: 'Alagoas' },
+    { value: 'AP', label: 'Amapá' },
+    { value: 'AM', label: 'Amazonas' },
+    { value: 'BA', label: 'Bahia' },
+    { value: 'CE', label: 'Ceará' },
+    { value: 'DF', label: 'Distrito Federal' },
+    { value: 'ES', label: 'Espírito Santo' },
+    { value: 'GO', label: 'Goiás' },
+    { value: 'MA', label: 'Maranhão' },
+    { value: 'MT', label: 'Mato Grosso' },
+    { value: 'MS', label: 'Mato Grosso do Sul' },
+    { value: 'MG', label: 'Minas Gerais' },
+    { value: 'PA', label: 'Pará' },
+    { value: 'PB', label: 'Paraíba' },
+    { value: 'PR', label: 'Paraná' },
+    { value: 'PE', label: 'Pernambuco' },
+    { value: 'PI', label: 'Piauí' },
+    { value: 'RJ', label: 'Rio de Janeiro' },
+    { value: 'RN', label: 'Rio Grande do Norte' },
+    { value: 'RS', label: 'Rio Grande do Sul' },
+    { value: 'RO', label: 'Rondônia' },
+    { value: 'RR', label: 'Roraima' },
+    { value: 'SC', label: 'Santa Catarina' },
+    { value: 'SP', label: 'São Paulo' },
+    { value: 'SE', label: 'Sergipe' },
+    { value: 'TO', label: 'Tocantins' }
+  ]
+ 
 
 
 
@@ -51,7 +85,8 @@ export default function CustomerEnrollmentPage() {
     zip_code: '',
     birthdate: null,
     email: '',
-    gender: ''
+    gender: '',
+    phone_number: ''
   });
 
   //lida com a validação do email
@@ -72,6 +107,15 @@ export default function CustomerEnrollmentPage() {
     setCpfError(false)
     setFormValid("")
   }
+
+  const handleErroGenerico = () => {
+    if(!formData.fullName || !formData.address || !formData.address_number || !formData.city || !formData.state || !formData.gender){
+      setErroGenerico(true)
+      return
+    }
+    setErroGenerico(false)
+    setFormValid("")
+  }
   //lida com a inserção da data de nascimento
   const handleBirthdateChange = (newValue) => {
     setFormData(prevState => ({
@@ -89,6 +133,18 @@ export default function CustomerEnrollmentPage() {
     }));
   };
 
+  const handlePhoneNumber = (e) => {
+    const { name, value } = e.target;
+    // Remove caracteres não numéricos
+    const numericValue = value.replace(/\D/g, '');
+    // Limita o comprimento máximo para 11 dígitos
+    const formattedValue = numericValue.slice(0, 11);
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: formattedValue,
+    }));
+  }
+
 
   // Função para lidar com a submissão do formulário
   async function handleSubmit(e) {
@@ -102,6 +158,11 @@ export default function CustomerEnrollmentPage() {
 
     if (emailError || !formData.email) {
       setFormValid("Email invalido")
+      setSuccess(false)
+      return
+    }
+    if(erroGenerico){
+      setFormValid("Preencha todos os campos requeridos")
       setSuccess(false)
       return
     }
@@ -161,12 +222,14 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={6} md={8}>
                 <TextField
+                  required
                   name="fullName"
                   label="Nome Completo"
                   variant="outlined"
                   fullWidth
                   value={formData.fullName}
                   onChange={handleChange}
+                  onBlur={handleErroGenerico}
                   sx={{
                     borderRadius: 10,
                   }}
@@ -175,6 +238,7 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={4}>
                 <TextField
+                  required
                   name="idt_number"
                   label="CPF"
                   variant="outlined"
@@ -207,6 +271,7 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={6} md={4}>
                 <TextField
+                  required
                   name="gender"
                   select
                   label="Selecione seu genero"
@@ -214,6 +279,7 @@ export default function CustomerEnrollmentPage() {
                   defaultValue={""}
                   value={formData.gender}
                   onChange={handleChange}
+                  onBlur={handleErroGenerico}
                   fullWidth
                   sx={{
                     borderRadius: 10,
@@ -245,14 +311,38 @@ export default function CustomerEnrollmentPage() {
                 />
               </Grid>
 
+              <Grid item xs={4}>
+                <InputMask
+                mask="(99) 99999-9999"
+                maskChar=" "
+                value={formData.phone_number}
+                onChange={handlePhoneNumber}
+                >
+                   {() => (
+                   <TextField
+                  name="phone_number"
+                  label="Telefone"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.phone_number}
+                  sx={{
+                    borderRadius: 10,
+                  }}
+                />
+              )}
+                </InputMask>
+              </Grid>
+
               <Grid item xs={6} md={8}>
                 <TextField
+                  required
                   name="address"
                   label="Endereço"
                   variant="outlined"
                   fullWidth
                   value={formData.address}
                   onChange={handleChange}
+                  onBlur={handleErroGenerico}
                   sx={{
                     borderRadius: 10,
                   }}
@@ -261,12 +351,14 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={4}>
                 <TextField
+                  required
                   name="address_number"
                   label="numero"
                   variant="outlined"
                   fullWidth
                   value={formData.address_number}
                   onChange={handleChange}
+                  onBlur={handleErroGenerico}
                   sx={{
                     borderRadius: 10,
                     width: 120
@@ -277,12 +369,14 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={6} md={4}>
                 <TextField
+                  required
                   name="city"
                   label="Cidade"
                   variant="outlined"
                   fullWidth
                   value={formData.city}
                   onChange={handleChange}
+                  onBlur={handleErroGenerico}
                   sx={{
                     borderRadius: 10,
                   }}
@@ -291,16 +385,26 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={6} md={2}>
                 <TextField
+                  required
                   name="state"
+                  select
                   label="Estado"
                   variant="outlined"
+                  defaultValue={""}
                   fullWidth
                   value={formData.state}
                   onChange={handleChange}
+                  onBlur={handleErroGenerico}
                   sx={{
                     borderRadius: 10,
                   }}
-                />
+                >
+                  {states.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </Grid>
 
               <Grid item xs={6} md={4}>
@@ -317,12 +421,7 @@ export default function CustomerEnrollmentPage() {
                   }}
                 />
               </Grid>
-
-              
-
-              
-
-              
+             
 
             </Grid>
 
