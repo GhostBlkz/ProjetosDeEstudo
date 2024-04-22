@@ -21,7 +21,7 @@ export default function validaCPF(cpf) {
       ].indexOf(strCPF) !== -1)
       return false
   
-    for (i=1; i<=9; i++)
+    for (let i=1; i<=9; i++)
       Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
   
     Resto = (Soma * 10) % 11
@@ -34,7 +34,7 @@ export default function validaCPF(cpf) {
   
     Soma = 0
   
-    for (i = 1; i <= 10; i++)
+    for (let i = 1; i <= 10; i++)
       Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i)
   
     Resto = (Soma * 10) % 11

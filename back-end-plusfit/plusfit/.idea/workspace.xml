@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="92239e9c-2422-4ca4-b3b9-ebe74b5d4992" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../front-end-plusfit/plusfit/src/Pages/CustomerEnrollmentPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../front-end-plusfit/plusfit/src/Pages/CustomerEnrollmentPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front-end-plusfit/plusfit/src/lib/ValidaCpf.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../front-end-plusfit/plusfit/src/lib/ValidaCpf.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/PlusfitApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/CustomerController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/request/AddressRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/request/ContactRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/request/CustomerRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/request/EnrollmentRequestDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/response/AddressResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/response/ContactResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/response/CustomerResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/controller/response/EnrollmentResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/model/Address.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/model/Contact.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/model/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/model/Enrollment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/model/enums/EnrollmentStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/repository/CustomerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/java/br/com/plusfit/service/CustomerService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/resources/db/migration/V1.1__CREATE_TABLE_CLIENTE.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/main/resources/db/migration/V1.2__CREATE_SEQUENCES.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plusfit/src/test/java/br/com/plusfit/PlusfitApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2fT7iHeV4O3bXZPw8WFyR72vQnS" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="PlusfitApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.com.plusfit.PlusfitApplication" />
+      <module name="plusfit.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.plusfit.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.PlusfitApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="92239e9c-2422-4ca4-b3b9-ebe74b5d4992" name="Changes" comment="" />
+      <created>1713813340902</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713813340902</updated>
+    </task>
+    <servers />
+  </component>
+</project>

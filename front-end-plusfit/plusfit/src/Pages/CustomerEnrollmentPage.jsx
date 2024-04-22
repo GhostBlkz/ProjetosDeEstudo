@@ -6,9 +6,9 @@ import CreateIcon from '@mui/icons-material/Create';
 import validaCPF from '../lib/ValidaCpf'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
-import 'dayjs/locale/en-gb'
+import Waiting from '../ui/Waiting';
+import axios from 'axios';
+
 
 
 // Email Validation
@@ -40,7 +40,14 @@ export default function CustomerEnrollmentPage() {
       label: 'Outro',
     }
   ]
-  //opções de seleção de estado
+  //opções de plano
+  const statusPlan = [
+    { value: 'ACTIVE', label: 'Ativo' },
+    { value: 'INACTIVE', label: 'Inativo' },
+    { value: 'CANCELLED', label: 'Cancelado' },
+    { value: 'SUSPENDED', label: 'Suspenso' }
+  ]
+  //opçes de seleção de estado
   const states = [
     { value: 'AC', label: 'Acre' },
     { value: 'AL', label: 'Alagoas' },
@@ -70,46 +77,69 @@ export default function CustomerEnrollmentPage() {
     { value: 'SE', label: 'Sergipe' },
     { value: 'TO', label: 'Tocantins' }
   ]
- 
 
 
 
 
+  //criando o formulario que sera enviado ao backend
   const [formData, setFormData] = useState({
-    fullName: '',
-    idt_number: '',
-    address: '',
-    address_number: '',
-    city: '',
-    state: '',
-    zip_code: '',
-    birthdate: null,
-    email: '',
-    gender: '',
-    phone_number: ''
+    customers: {
+
+      name: '',
+      cpf: '',
+      gender: '',
+      birthDate: '',
+
+      addresses: {
+        city: '',
+        state: '',
+        neighborhood: '',
+        street: '',
+        addressNumber: '',
+        zipCode: '',
+
+      },
+      contact: {
+        email: '',
+        phone_number: ''
+
+      },
+      enrollment: {
+        planDescription: '',
+        status: '',
+      },
+    }
   });
+
+  //Backdrop de espera
+  const [state, setState] = React.useState({
+    showWaiting: false
+  })
+  const { showWaiting } = state
 
   //lida com a validação do email
   const handleEmail = () => {
-    if (!isEmail(formData.email) || !formData.email) {
+    if (!isEmail(formData.customers.contact.email) || !formData.customers.contact.email) {
       setEmailError(true)
       return;
     }
     setEmailError(false)
     setFormValid("")
   }
-
+  //lida com a validação do cpf
   const handleCpf = () => {
-    if (!validarCPF(formData.idt_number) || !formData.idt_number) {
+    if (!validarCPF(formData.customers.cpf) || !formData.customers.cpf) {
       setCpfError(true)
       return;
     }
     setCpfError(false)
     setFormValid("")
   }
-
+  //lida com os campos requeridos
   const handleErroGenerico = () => {
-    if(!formData.fullName || !formData.address || !formData.address_number || !formData.city || !formData.state || !formData.gender){
+    if (!formData.customers.name || !formData.customers.addresses.street ||
+      !formData.customers.addresses.neighborhood || !formData.customers.addresses.addressNumber || !formData.customers.addresses.city ||
+      !formData.customers.addresses.state || !formData.customers.gender) {
       setErroGenerico(true)
       return
     }
@@ -117,59 +147,160 @@ export default function CustomerEnrollmentPage() {
     setFormValid("")
   }
   //lida com a inserção da data de nascimento
-  const handleBirthdateChange = (newValue) => {
-    setFormData(prevState => ({
-      ...prevState,
-      birthdate: newValue,
-    }));
+  const handleBirthdate = (e) => {
+    const { value } = e.target;
+    // Remove caracteres não numéricos
+    const numericValue = value.replace(/\D/g, '');
+
+    // Verifica se o valor tem até 8 dígitos (DDMMAAAA)
+    if (numericValue.length <= 8) {
+      // Formata a data no formato XX/XX/XXXX
+      let formattedValue = numericValue.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
+
+      // Atualiza o estado com a data formatada
+      setFormData(prevState => ({
+        ...prevState,
+        customers: {
+          ...prevState.customers,
+          birthDate: formattedValue,
+        },
+      }));
+    }
   };
 
   // Função para lidar com mudanças nos inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value,
-    }));
+
+    if (name in formData.customers.contact) {
+      // Atualiza campos dentro de 'contact'
+      setFormData(prevState => ({
+        ...prevState,
+        customers: {
+          ...prevState.customers,
+          contact: {
+            ...prevState.customers.contact,
+            [name]: value,
+          },
+        },
+      }));
+    } else if (name in formData.customers.addresses) {
+      // Atualiza campos dentro de 'addresses'
+      setFormData(prevState => ({
+        ...prevState,
+        customers: {
+          ...prevState.customers,
+          addresses: {
+            ...prevState.customers.addresses,
+            [name]: value,
+          },
+        },
+      }));
+    } else if (name in formData.customers.enrollment) {
+      // Atualiza campos dentro de 'enrollment'
+      setFormData(prevState => ({
+        ...prevState,
+        customers: {
+          ...prevState.customers,
+          enrollment: {
+            ...prevState.customers.enrollment,
+            [name]: value,
+          },
+        },
+      }));
+    } else {
+      // Para campos diretamente dentro de 'customers'
+      setFormData(prevState => ({
+        ...prevState,
+        customers: {
+          ...prevState.customers,
+          [name]: value,
+        },
+      }));
+    }
   };
 
+
+
   const handlePhoneNumber = (e) => {
-    const { name, value } = e.target;
+    const { value } = e.target;
     // Remove caracteres não numéricos
     const numericValue = value.replace(/\D/g, '');
     // Limita o comprimento máximo para 11 dígitos
     const formattedValue = numericValue.slice(0, 11);
+
     setFormData(prevState => ({
       ...prevState,
-      [name]: formattedValue,
+      customers: {
+        ...prevState.customers,
+        contact: {
+          ...prevState.customers.contact,
+          phone_number: formattedValue,
+        },
+      },
     }));
-  }
+  };
 
 
   // Função para lidar com a submissão do formulário
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (cpfError || !formData.idt_number) {
+    if (cpfError || !formData.customers.cpf) {
       setFormValid("CPF invalido")
       setSuccess(false)
       return
     }
 
-    if (emailError || !formData.email) {
+    if (emailError || !formData.customers.contact.email) {
       setFormValid("Email invalido")
       setSuccess(false)
       return
     }
-    if(erroGenerico){
+    if (erroGenerico) {
       setFormValid("Preencha todos os campos requeridos")
       setSuccess(false)
       return
     }
 
-    setSuccess(true)
+    
     console.log(formData);
-    console.log("Data de Nascimento formatada:", formData.birthdate ? dayjs(formData.birthdate).format('DD/MM/YYYY') : null);
+
+  // Declarar uma nova variável dados com state e atribuir o objeto
+    const data = {
+      customers: formData
+    }
+
+    // Criar a constante com os dados do cabeçalho
+    const headers = {
+      'headers': {
+          // Indicar que será enviado os dados em formato de objeto
+          'Content-Type': 'application/json'
+      }
+  };
+
+  setState({...state, showWaiting: true})
+  axios.post('http://localhost:8080/customer', data, headers)
+  .then((response) => {
+
+    setSuccess(true)
+    setState({...state, showWaiting: false})
+  })
+  .catch((err) => {
+    setSuccess(false)
+    console.log('Log de erro: ' + err)
+
+    if (err.response){
+      setFormValid(err.response.data.message)
+      setState({...state, showWaiting: false})
+
+    } else {
+      setFormValid("Ocorreu um erro")
+      setState({...state, showWaiting: false})
+
+    }
+  })
+
   };
 
   function handleVoltar() {
@@ -223,11 +354,11 @@ export default function CustomerEnrollmentPage() {
               <Grid item xs={6} md={8}>
                 <TextField
                   required
-                  name="fullName"
+                  name="name"
                   label="Nome Completo"
                   variant="outlined"
                   fullWidth
-                  value={formData.fullName}
+                  value={formData.customers.name}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -239,12 +370,12 @@ export default function CustomerEnrollmentPage() {
               <Grid item xs={4}>
                 <TextField
                   required
-                  name="idt_number"
+                  name="cpf"
                   label="CPF"
                   variant="outlined"
                   fullWidth
                   error={cpfError}
-                  value={formData.idt_number}
+                  value={formData.customers.cpf}
                   onChange={handleChange}
                   onBlur={handleCpf}
                   sx={{
@@ -254,13 +385,15 @@ export default function CustomerEnrollmentPage() {
               </Grid>
 
               <Grid item xs={6} md={4}>
-                <DatePicker
-                  name="birthdate"
+                <TextField
+                  required
+                  name="birthDate"
                   label="Data de Nascimento"
+                  helperText="DD/MM/YYYY"
                   inputVariant="outlined"
                   fullWidth
-                  value={formData.birthdate}
-                  onChange={handleBirthdateChange}
+                  value={formData.customers.birthDate}
+                  onChange={handleBirthdate}
                   slotProps={<TextField variant='outlined' />}
                   sx={{
                     borderRadius: 10,
@@ -277,7 +410,7 @@ export default function CustomerEnrollmentPage() {
                   label="Selecione seu genero"
                   variant="outlined"
                   defaultValue={""}
-                  value={formData.gender}
+                  value={formData.customers.gender}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   fullWidth
@@ -296,12 +429,13 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={6} md={8}>
                 <TextField
+                  required
                   name="email"
                   label="E-mail"
                   variant="outlined"
                   fullWidth
                   error={emailError}
-                  value={formData.email}
+                  value={formData.customers.contact.email}
                   onChange={handleChange}
                   onBlur={handleEmail}
                   sx={{
@@ -313,34 +447,50 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={4}>
                 <InputMask
-                mask="(99) 99999-9999"
-                maskChar=" "
-                value={formData.phone_number}
-                onChange={handlePhoneNumber}
+                  mask="(99) 99999-9999"
+                  maskChar=" "
+                  value={formData.customers.contact.phone_number}
+                  onChange={handlePhoneNumber}
                 >
-                   {() => (
-                   <TextField
-                  name="phone_number"
-                  label="Telefone"
-                  variant="outlined"
-                  fullWidth
-                  value={formData.phone_number}
-                  sx={{
-                    borderRadius: 10,
-                  }}
-                />
-              )}
+                  {() => (
+                    <TextField
+                      name="phone_number"
+                      label="Telefone"
+                      variant="outlined"
+                      fullWidth
+                      value={formData.customers.contact.phone_number}
+                      sx={{
+                        borderRadius: 10,
+                      }}
+                    />
+                  )}
                 </InputMask>
               </Grid>
 
               <Grid item xs={6} md={8}>
                 <TextField
                   required
-                  name="address"
-                  label="Endereço"
+                  name="neighborhood"
+                  label="Bairro"
                   variant="outlined"
                   fullWidth
-                  value={formData.address}
+                  value={formData.customers.addresses.neighborhood}
+                  onChange={handleChange}
+                  onBlur={handleErroGenerico}
+                  sx={{
+                    borderRadius: 10,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6} md={8}>
+                <TextField
+                  required
+                  name="street"
+                  label="Rua"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.customers.addresses.street}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -352,11 +502,11 @@ export default function CustomerEnrollmentPage() {
               <Grid item xs={4}>
                 <TextField
                   required
-                  name="address_number"
-                  label="numero"
+                  name="addressNumber"
+                  label="Número"
                   variant="outlined"
                   fullWidth
-                  value={formData.address_number}
+                  value={formData.customers.addresses.addressNumber}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -374,7 +524,7 @@ export default function CustomerEnrollmentPage() {
                   label="Cidade"
                   variant="outlined"
                   fullWidth
-                  value={formData.city}
+                  value={formData.customers.addresses.city}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -392,7 +542,7 @@ export default function CustomerEnrollmentPage() {
                   variant="outlined"
                   defaultValue={""}
                   fullWidth
-                  value={formData.state}
+                  value={formData.customers.addresses.state}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -409,11 +559,11 @@ export default function CustomerEnrollmentPage() {
 
               <Grid item xs={6} md={4}>
                 <TextField
-                  name="zip_code"
+                  name="zipCode"
                   label="CEP"
                   variant="outlined"
                   fullWidth
-                  value={formData.zip_code}
+                  value={formData.customers.addresses.zipCode}
                   onChange={handleChange}
                   sx={{
                     borderRadius: 10,
@@ -421,7 +571,44 @@ export default function CustomerEnrollmentPage() {
                   }}
                 />
               </Grid>
-             
+
+              <Grid item xs={6} md={8}>
+                <TextField
+                  name="planDescription"
+                  label="Objetivo do Plano"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.customers.enrollment.planDescription}
+                  onChange={handleChange}
+                  sx={{
+                    borderRadius: 10,
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={6} md={4}>
+                <TextField
+                  name="status"
+                  select
+                  label="Status do Plano"
+                  variant="outlined"
+                  defaultValue={""}
+                  value={formData.customers.enrollment.status}
+                  onChange={handleChange}
+                  fullWidth
+                  sx={{
+                    borderRadius: 10,
+
+                  }}
+                >
+                  {statusPlan.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
 
             </Grid>
 
@@ -429,7 +616,7 @@ export default function CustomerEnrollmentPage() {
               <Button type="submit" onClick={handleSubmit} variant="contained" color="primary" sx={{ width: 'auto' }} endIcon={<CreateIcon />}>
                 Cadastrar
               </Button>
-              <Button variant="contained" onClick={handleVoltar} color="secondary" sx={{ width: 'auto', position: 'absolute', right: 400 }}>
+              <Button variant="contained" onClick={handleVoltar} color="secondary" sx={{ width: 'auto' }}>
                 Voltar
               </Button>
             </Box>
