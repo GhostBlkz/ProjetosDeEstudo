@@ -3,6 +3,7 @@ package br.com.plusfit.model;
 import br.com.plusfit.controller.request.ContactRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name="contact")
+@NoArgsConstructor
 public class Contact {
 
     @Id
@@ -41,8 +43,8 @@ public class Contact {
     @Column(name="flg_active")
     private Boolean active;
 
-    public Contact (final ContactRequestDto contactRequestDto) {
-
+    public Contact (final ContactRequestDto contactRequestDto, Customer customer) {
+        this.customer = customer;
         this.contactId = contactRequestDto.getContactId();
         this.email = contactRequestDto.getEmail();
         this.phoneNumber = contactRequestDto.getPhoneNumber();

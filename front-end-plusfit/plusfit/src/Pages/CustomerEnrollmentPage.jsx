@@ -83,8 +83,6 @@ export default function CustomerEnrollmentPage() {
 
   //criando o formulario que sera enviado ao backend
   const [formData, setFormData] = useState({
-    customers: {
-
       name: '',
       cpf: '',
       gender: '',
@@ -93,7 +91,7 @@ export default function CustomerEnrollmentPage() {
       addresses: {
         city: '',
         state: '',
-        neighborhood: '',
+        neighbourhood: '',
         street: '',
         addressNumber: '',
         zipCode: '',
@@ -101,7 +99,7 @@ export default function CustomerEnrollmentPage() {
       },
       contact: {
         email: '',
-        phone_number: ''
+        phoneNumber: ''
 
       },
       enrollment: {
@@ -109,7 +107,7 @@ export default function CustomerEnrollmentPage() {
         status: '',
       },
     }
-  });
+  );
 
   //Backdrop de espera
   const [state, setState] = React.useState({
@@ -119,7 +117,7 @@ export default function CustomerEnrollmentPage() {
 
   //lida com a validação do email
   const handleEmail = () => {
-    if (!isEmail(formData.customers.contact.email) || !formData.customers.contact.email) {
+    if (!isEmail(formData.contact.email) || !formData.contact.email) {
       setEmailError(true)
       return;
     }
@@ -128,7 +126,7 @@ export default function CustomerEnrollmentPage() {
   }
   //lida com a validação do cpf
   const handleCpf = () => {
-    if (!validarCPF(formData.customers.cpf) || !formData.customers.cpf) {
+    if (!validarCPF(formData.cpf) || !formData.cpf) {
       setCpfError(true)
       return;
     }
@@ -137,9 +135,9 @@ export default function CustomerEnrollmentPage() {
   }
   //lida com os campos requeridos
   const handleErroGenerico = () => {
-    if (!formData.customers.name || !formData.customers.addresses.street ||
-      !formData.customers.addresses.neighborhood || !formData.customers.addresses.addressNumber || !formData.customers.addresses.city ||
-      !formData.customers.addresses.state || !formData.customers.gender) {
+    if (!formData.name || !formData.addresses.street ||
+      !formData.addresses.neighbourhood || !formData.addresses.addressNumber || !formData.addresses.city ||
+      !formData.addresses.state || !formData.gender) {
       setErroGenerico(true)
       return
     }
@@ -148,72 +146,60 @@ export default function CustomerEnrollmentPage() {
   }
   //lida com a inserção da data de nascimento
   const handleBirthdate = (e) => {
-    const { value } = e.target;
+    const { name, value } = e.target;
     // Remove caracteres não numéricos
     const numericValue = value.replace(/\D/g, '');
-
+    
     // Verifica se o valor tem até 8 dígitos (DDMMAAAA)
     if (numericValue.length <= 8) {
       // Formata a data no formato XX/XX/XXXX
       let formattedValue = numericValue.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
-
+      
       // Atualiza o estado com a data formatada
       setFormData(prevState => ({
         ...prevState,
-        customers: {
-          ...prevState.customers,
-          birthDate: formattedValue,
-        },
+        [name]: formattedValue,
       }));
     }
   };
+  // formata a data para o backend com YYYY-MM-DD
+  let dataFormatada = formData.birthDate.split('/').reverse().join('-');
+  
 
   // Função para lidar com mudanças nos inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name in formData.customers.contact) {
-      // Atualiza campos dentro de 'contact'
+  
+    if (name in formData) {
+      // Atualiza campos diretamente no nível raiz do objeto formData
       setFormData(prevState => ({
         ...prevState,
-        customers: {
-          ...prevState.customers,
-          contact: {
-            ...prevState.customers.contact,
-            [name]: value,
-          },
-        },
+        [name]: value,
       }));
-    } else if (name in formData.customers.addresses) {
+    } else if (name in formData.addresses) {
       // Atualiza campos dentro de 'addresses'
       setFormData(prevState => ({
         ...prevState,
-        customers: {
-          ...prevState.customers,
-          addresses: {
-            ...prevState.customers.addresses,
-            [name]: value,
-          },
+        addresses: {
+          ...prevState.addresses,
+          [name]: value,
         },
       }));
-    } else if (name in formData.customers.enrollment) {
+    } else if (name in formData.contact) {
+      // Atualiza campos dentro de 'contact'
+      setFormData(prevState => ({
+        ...prevState,
+        contact: {
+          ...prevState.contact,
+          [name]: value,
+        },
+      }));
+    } else if (name in formData.enrollment) {
       // Atualiza campos dentro de 'enrollment'
       setFormData(prevState => ({
         ...prevState,
-        customers: {
-          ...prevState.customers,
-          enrollment: {
-            ...prevState.customers.enrollment,
-            [name]: value,
-          },
-        },
-      }));
-    } else {
-      // Para campos diretamente dentro de 'customers'
-      setFormData(prevState => ({
-        ...prevState,
-        customers: {
-          ...prevState.customers,
+        enrollment: {
+          ...prevState.enrollment,
           [name]: value,
         },
       }));
@@ -228,15 +214,12 @@ export default function CustomerEnrollmentPage() {
     const numericValue = value.replace(/\D/g, '');
     // Limita o comprimento máximo para 11 dígitos
     const formattedValue = numericValue.slice(0, 11);
-
+  
     setFormData(prevState => ({
       ...prevState,
-      customers: {
-        ...prevState.customers,
-        contact: {
-          ...prevState.customers.contact,
-          phone_number: formattedValue,
-        },
+      contact: {
+        ...prevState.contact,
+        phoneNumber: formattedValue,
       },
     }));
   };
@@ -246,13 +229,13 @@ export default function CustomerEnrollmentPage() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (cpfError || !formData.customers.cpf) {
+    if (cpfError || !formData.cpf) {
       setFormValid("CPF invalido")
       setSuccess(false)
       return
     }
 
-    if (emailError || !formData.customers.contact.email) {
+    if (emailError || !formData.contact.email) {
       setFormValid("Email invalido")
       setSuccess(false)
       return
@@ -268,8 +251,35 @@ export default function CustomerEnrollmentPage() {
 
   // Declarar uma nova variável dados com state e atribuir o objeto
     const data = {
-      customers: formData
+      customerCode: "548cf9d6-124f-4e32-b6bf-5e6f0994e579",
+      name: formData.name,
+      cpf: formData.cpf,
+      birthDate: dataFormatada,
+      addresses: [
+        {
+        city: formData.addresses.city,
+        state: formData.addresses.state, 
+        neighbourhood: formData.addresses.neighbourhood,
+        street: formData.addresses.street,
+        addressNumber: formData.addresses.addressNumber,
+        zipCode: formData.addresses.zipCode
+      }
+    ],
+      contact: [
+        {
+        email: formData.contact.email,
+        phoneNumber: formData.contact.phoneNumber
+      }
+    ],
+      enrollment: [
+        {
+        planDescription: formData.enrollment.planDescription,
+        status: formData.enrollment.status
+      }
+    ],
+      
     }
+    console.log(data)
 
     // Criar a constante com os dados do cabeçalho
     const headers = {
@@ -281,7 +291,7 @@ export default function CustomerEnrollmentPage() {
 
   setState({...state, showWaiting: true})
   axios.post('http://localhost:8080/customer', data, headers)
-  .then((response) => {
+  .then((response) => {  // Acessa o then quando a API retornar status 200
 
     setSuccess(true)
     setState({...state, showWaiting: false})
@@ -358,7 +368,7 @@ export default function CustomerEnrollmentPage() {
                   label="Nome Completo"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.name}
+                  value={formData.name}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -375,7 +385,7 @@ export default function CustomerEnrollmentPage() {
                   variant="outlined"
                   fullWidth
                   error={cpfError}
-                  value={formData.customers.cpf}
+                  value={formData.cpf}
                   onChange={handleChange}
                   onBlur={handleCpf}
                   sx={{
@@ -392,7 +402,7 @@ export default function CustomerEnrollmentPage() {
                   helperText="DD/MM/YYYY"
                   inputVariant="outlined"
                   fullWidth
-                  value={formData.customers.birthDate}
+                  value={formData.birthDate}
                   onChange={handleBirthdate}
                   slotProps={<TextField variant='outlined' />}
                   sx={{
@@ -410,7 +420,7 @@ export default function CustomerEnrollmentPage() {
                   label="Selecione seu genero"
                   variant="outlined"
                   defaultValue={""}
-                  value={formData.customers.gender}
+                  value={formData.gender}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   fullWidth
@@ -435,7 +445,7 @@ export default function CustomerEnrollmentPage() {
                   variant="outlined"
                   fullWidth
                   error={emailError}
-                  value={formData.customers.contact.email}
+                  value={formData.contact.email}
                   onChange={handleChange}
                   onBlur={handleEmail}
                   sx={{
@@ -449,16 +459,16 @@ export default function CustomerEnrollmentPage() {
                 <InputMask
                   mask="(99) 99999-9999"
                   maskChar=" "
-                  value={formData.customers.contact.phone_number}
+                  value={formData.contact.phoneNumber}
                   onChange={handlePhoneNumber}
                 >
                   {() => (
                     <TextField
-                      name="phone_number"
+                      name="phoneNumber"
                       label="Telefone"
                       variant="outlined"
                       fullWidth
-                      value={formData.customers.contact.phone_number}
+                      value={formData.contact.phoneNumber}
                       sx={{
                         borderRadius: 10,
                       }}
@@ -470,11 +480,11 @@ export default function CustomerEnrollmentPage() {
               <Grid item xs={6} md={8}>
                 <TextField
                   required
-                  name="neighborhood"
+                  name="neighbourhood"
                   label="Bairro"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.addresses.neighborhood}
+                  value={formData.addresses.neighbourhood}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -490,7 +500,7 @@ export default function CustomerEnrollmentPage() {
                   label="Rua"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.addresses.street}
+                  value={formData.addresses.street}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -506,7 +516,7 @@ export default function CustomerEnrollmentPage() {
                   label="Número"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.addresses.addressNumber}
+                  value={formData.addresses.addressNumber}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -524,7 +534,7 @@ export default function CustomerEnrollmentPage() {
                   label="Cidade"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.addresses.city}
+                  value={formData.addresses.city}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -542,7 +552,7 @@ export default function CustomerEnrollmentPage() {
                   variant="outlined"
                   defaultValue={""}
                   fullWidth
-                  value={formData.customers.addresses.state}
+                  value={formData.addresses.state}
                   onChange={handleChange}
                   onBlur={handleErroGenerico}
                   sx={{
@@ -563,7 +573,7 @@ export default function CustomerEnrollmentPage() {
                   label="CEP"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.addresses.zipCode}
+                  value={formData.addresses.zipCode}
                   onChange={handleChange}
                   sx={{
                     borderRadius: 10,
@@ -578,7 +588,7 @@ export default function CustomerEnrollmentPage() {
                   label="Objetivo do Plano"
                   variant="outlined"
                   fullWidth
-                  value={formData.customers.enrollment.planDescription}
+                  value={formData.enrollment.planDescription}
                   onChange={handleChange}
                   sx={{
                     borderRadius: 10,
@@ -593,7 +603,7 @@ export default function CustomerEnrollmentPage() {
                   label="Status do Plano"
                   variant="outlined"
                   defaultValue={""}
-                  value={formData.customers.enrollment.status}
+                  value={formData.enrollment.status}
                   onChange={handleChange}
                   fullWidth
                   sx={{

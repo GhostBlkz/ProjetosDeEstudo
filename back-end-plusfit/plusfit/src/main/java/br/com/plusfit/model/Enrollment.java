@@ -4,12 +4,14 @@ import br.com.plusfit.controller.request.EnrollmentRequestDto;
 import br.com.plusfit.model.enums.EnrollmentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "enrollment")
+@NoArgsConstructor
 public class Enrollment {
 
     @Id
@@ -19,7 +21,7 @@ public class Enrollment {
     private Long enrollmentId;
 
     @OneToOne
-    @JoinColumn(name="idt_customer")                                         // Foreign key
+    @JoinColumn(name="idt_customer")
     private Customer customer;
 
     @Column(name = "des_plan_type")
@@ -42,8 +44,9 @@ public class Enrollment {
     @Column(name="flg_active")
     private Boolean active;
 
-    public Enrollment (final EnrollmentRequestDto enrollmentRequestDto) {
+    public Enrollment (final EnrollmentRequestDto enrollmentRequestDto, Customer customer) {
         this.enrollmentId = enrollmentRequestDto.getEnrollmentId();
+        this.customer = customer;
         this.planDescription = enrollmentRequestDto.getPlanDescription();
         this.status = EnrollmentStatus.getByString(enrollmentRequestDto.getStatus());
         this.creationDate = LocalDateTime.now();

@@ -51,13 +51,16 @@ public class Customer {
     @Column(name="flg_active")
     private Boolean active;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",
+    cascade = CascadeType.ALL)
     private List<Address> addresses;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",
+    cascade = CascadeType.ALL)
     private List<Contact> contact;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer",
+    cascade = CascadeType.ALL)
     private List<Enrollment> enrollment;
 
     public Customer (final CustomerRequestDto customerRequestDto) {
@@ -72,17 +75,17 @@ public class Customer {
 
         this.addresses = new ArrayList<>();
         for (final AddressRequestDto addressRequestDto: customerRequestDto.getAddresses()) {
-            this.addresses.add(new Address(addressRequestDto));
+            this.addresses.add(new Address(addressRequestDto, this));
         }
 
         this.contact = new ArrayList<>();
         for (final ContactRequestDto contactRequestDto: customerRequestDto.getContact()) {
-            this.contact.add(new Contact(contactRequestDto));
+            this.contact.add(new Contact(contactRequestDto, this));
         }
 
         this.enrollment = new ArrayList<>();
         for (final EnrollmentRequestDto enrollmentRequestDto: customerRequestDto.getEnrollment()) {
-            this.enrollment.add(new Enrollment(enrollmentRequestDto));
+            this.enrollment.add(new Enrollment(enrollmentRequestDto, this));
         }
     }
 }

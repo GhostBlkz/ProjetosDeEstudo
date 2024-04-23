@@ -31,6 +31,7 @@ public class CustomerService {
         customerFromDatabase.setName(customerFromRequest.getName());
         customerFromDatabase.setBirthDate(customerFromRequest.getBirthDate());
 
+
         // this.customerMapper.updateCustomerFromDto(customerFromRequest, customerFromDatabase);        // Passando as informacoes novas do fromrequest para o customerfromdatabase (informacoes velhas)
         return this.customerRepository.save(customerFromDatabase);
     }

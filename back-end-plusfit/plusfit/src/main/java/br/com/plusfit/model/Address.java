@@ -3,12 +3,14 @@ package br.com.plusfit.model;
 import br.com.plusfit.controller.request.AddressRequestDto;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name="address")
+@NoArgsConstructor
 public class Address {
 
     @Id
@@ -52,7 +54,8 @@ public class Address {
     @Column(name="flg_active")
     private Boolean active;
 
-    public Address (final AddressRequestDto addressRequestDto) {
+    public Address (final AddressRequestDto addressRequestDto, Customer customer) {
+        this.customer = customer;
         this.addressId = addressRequestDto.getAddressId();
         this.city = addressRequestDto.getCity();
         this.state = addressRequestDto.getState();
