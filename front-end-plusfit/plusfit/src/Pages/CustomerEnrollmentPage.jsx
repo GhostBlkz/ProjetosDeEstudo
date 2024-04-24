@@ -83,30 +83,30 @@ export default function CustomerEnrollmentPage() {
 
   //criando o formulario que sera enviado ao backend
   const [formData, setFormData] = useState({
-      name: '',
-      cpf: '',
-      gender: '',
-      birthDate: '',
+    name: '',
+    cpf: '',
+    gender: '',
+    birthDate: '',
 
-      addresses: {
-        city: '',
-        state: '',
-        neighbourhood: '',
-        street: '',
-        addressNumber: '',
-        zipCode: '',
+    addresses: {
+      city: '',
+      state: '',
+      neighbourhood: '',
+      street: '',
+      addressNumber: '',
+      zipCode: '',
 
-      },
-      contact: {
-        email: '',
-        phoneNumber: ''
+    },
+    contact: {
+      email: '',
+      phoneNumber: ''
 
-      },
-      enrollment: {
-        planDescription: '',
-        status: '',
-      },
-    }
+    },
+    enrollment: {
+      planDescription: '',
+      status: '',
+    },
+  }
   );
 
   //Backdrop de espera
@@ -149,12 +149,12 @@ export default function CustomerEnrollmentPage() {
     const { name, value } = e.target;
     // Remove caracteres não numéricos
     const numericValue = value.replace(/\D/g, '');
-    
+
     // Verifica se o valor tem até 8 dígitos (DDMMAAAA)
     if (numericValue.length <= 8) {
       // Formata a data no formato XX/XX/XXXX
       let formattedValue = numericValue.replace(/(\d{2})(\d{2})(\d{4})/, '$1/$2/$3');
-      
+
       // Atualiza o estado com a data formatada
       setFormData(prevState => ({
         ...prevState,
@@ -164,12 +164,12 @@ export default function CustomerEnrollmentPage() {
   };
   // formata a data para o backend com YYYY-MM-DD
   let dataFormatada = formData.birthDate.split('/').reverse().join('-');
-  
+
 
   // Função para lidar com mudanças nos inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     if (name in formData) {
       // Atualiza campos diretamente no nível raiz do objeto formData
       setFormData(prevState => ({
@@ -214,7 +214,7 @@ export default function CustomerEnrollmentPage() {
     const numericValue = value.replace(/\D/g, '');
     // Limita o comprimento máximo para 11 dígitos
     const formattedValue = numericValue.slice(0, 11);
-  
+
     setFormData(prevState => ({
       ...prevState,
       contact: {
@@ -246,70 +246,70 @@ export default function CustomerEnrollmentPage() {
       return
     }
 
-    
+
     console.log(formData);
 
-  // Declarar uma nova variável dados com state e atribuir o objeto
+    // Declarar uma nova variável dados com state e atribuir o objeto
     const data = {
-      customerCode: "548cf9d6-124f-4e32-b6bf-5e6f0994e579",
+      customerCode: "bf9478b6-2781-4ae0-aa7d-beef54262ff2",
       name: formData.name,
       cpf: formData.cpf,
       birthDate: dataFormatada,
       addresses: [
         {
-        city: formData.addresses.city,
-        state: formData.addresses.state, 
-        neighbourhood: formData.addresses.neighbourhood,
-        street: formData.addresses.street,
-        addressNumber: formData.addresses.addressNumber,
-        zipCode: formData.addresses.zipCode
-      }
-    ],
+          city: formData.addresses.city,
+          state: formData.addresses.state,
+          neighbourhood: formData.addresses.neighbourhood,
+          street: formData.addresses.street,
+          addressNumber: formData.addresses.addressNumber,
+          zipCode: formData.addresses.zipCode
+        }
+      ],
       contact: [
         {
-        email: formData.contact.email,
-        phoneNumber: formData.contact.phoneNumber
-      }
-    ],
+          email: formData.contact.email,
+          phoneNumber: formData.contact.phoneNumber
+        }
+      ],
       enrollment: [
         {
-        planDescription: formData.enrollment.planDescription,
-        status: formData.enrollment.status
-      }
-    ],
-      
+          planDescription: formData.enrollment.planDescription,
+          status: formData.enrollment.status
+        }
+      ],
+
     }
     console.log(data)
 
     // Criar a constante com os dados do cabeçalho
     const headers = {
       'headers': {
-          // Indicar que será enviado os dados em formato de objeto
-          'Content-Type': 'application/json'
+        // Indicar que será enviado os dados em formato de objeto
+        'Content-Type': 'application/json'
       }
-  };
+    };
 
-  setState({...state, showWaiting: true})
-  axios.post('http://localhost:8080/customer', data, headers)
-  .then((response) => {  // Acessa o then quando a API retornar status 200
+    setState({ ...state, showWaiting: true })
+    axios.post('http://localhost:8080/customer', data, headers)
+      .then((response) => {  // Acessa o then quando a API retornar status 200
 
-    setSuccess(true)
-    setState({...state, showWaiting: false})
-  })
-  .catch((err) => {
-    setSuccess(false)
-    console.log('Log de erro: ' + err)
+        setSuccess(true)
+        setState({ ...state, showWaiting: false })
+      })
+      .catch((err) => {
+        setSuccess(false)
+        console.log('Log de erro: ' + err)
 
-    if (err.response){
-      setFormValid(err.response.data.message)
-      setState({...state, showWaiting: false})
+        if (err.response) {
+          setFormValid(err.response.data.message)
+          setState({ ...state, showWaiting: false })
 
-    } else {
-      setFormValid("Ocorreu um erro")
-      setState({...state, showWaiting: false})
+        } else {
+          setFormValid("Ocorreu um erro")
+          setState({ ...state, showWaiting: false })
 
-    }
-  })
+        }
+      })
 
   };
 
@@ -342,6 +342,7 @@ export default function CustomerEnrollmentPage() {
   return (
 
     <>
+      <Waiting show={showWaiting} />
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
         <Paper elevation={6}
           sx={{
