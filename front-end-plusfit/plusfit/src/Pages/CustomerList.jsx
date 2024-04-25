@@ -58,7 +58,6 @@ export default function CustomerList() {
     const [state, setstate] = useState({
         customers: [],
         showWaiting: false
-        
     });
     
     // Extrair os estados customers e showWaiting de state
