@@ -45,9 +45,6 @@ export default function MainMenu() {
         <MenuItem onClick={handleClose} component={Link} to="/clientes">
           Clientes
           </MenuItem>
-          <MenuItem onClick={handleClose} component={Link} to="/cadastrar_cliente">
-            Cadastrar Cliente
-          </MenuItem>
         <MenuItem onClick={handleClose} component={Link} to="/criar_ficha">
           Criar Fichas de Treino
           </MenuItem>

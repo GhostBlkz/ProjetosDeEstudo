@@ -166,6 +166,7 @@ export default function CustomerEnrollmentPage() {
   let dataFormatada = formData.birthDate.split('/').reverse().join('-');
 
 
+
   // Função para lidar com mudanças nos inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -251,7 +252,6 @@ export default function CustomerEnrollmentPage() {
 
     // Declarar uma nova variável dados com state e atribuir o objeto
     const data = {
-      customerCode: "bf9478b6-2781-4ae0-aa7d-beef54262ff2",
       name: formData.name,
       cpf: formData.cpf,
       birthDate: dataFormatada,
@@ -314,7 +314,7 @@ export default function CustomerEnrollmentPage() {
   };
 
   function handleVoltar() {
-    window.location.href = "/"
+    window.location.href = "/clientes"
   }
 
   //seta um timeout para o alert de erro
