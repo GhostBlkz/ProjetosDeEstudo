@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Typography, Box, Paper, IconButton, Button } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import AddBoxIcon from '@mui/icons-material/AddBox'
 
 import { DataGrid } from "@mui/x-data-grid";
@@ -26,6 +27,24 @@ export default function CustomerList() {
         { field: 'phoneNumber', headerName: 'Telefone', width: 120 },
         { field: 'email', headerName: 'E-mail', width: 230 },
         { field: 'status', headerName: 'Plano', width: 70 },
+        
+        {
+            field: '_training',
+            headerName: 'Criar Ficha',
+            headerAlign: 'center',
+            align: 'center',
+            sortable: 'false',
+            width: 90,
+            renderCell: params => (
+                <Link to={'/criar_ficha'}>
+                    <IconButton aria-label="Criar Ficha">
+                        <CreateNewFolderIcon color="secondary"/>
+                    </IconButton>
+                </Link>
+            )
+        },
+
+
         {
             field: '_edit',
             headerName: 'Editar',
@@ -121,7 +140,7 @@ export default function CustomerList() {
     }
 
     async function handleDeleteButtonClick(id) {
-        if (confirm('Tem certeza que deseja excluir este cliente?')) {
+        if (confirm('Tem certeza que deseja inativar este cliente?')) {
             //mostra backdrop
             setState({ ...state, showWaiting: true })
             try {
