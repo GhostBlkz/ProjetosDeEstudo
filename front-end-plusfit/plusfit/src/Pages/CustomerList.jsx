@@ -28,23 +28,8 @@ export default function CustomerList() {
         { field: 'email', headerName: 'E-mail', width: 230 },
         { field: 'status', headerName: 'Plano', width: 70 },
         
-        {
-            field: '_training',
-            headerName: 'Criar Ficha',
-            headerAlign: 'center',
-            align: 'center',
-            sortable: 'false',
-            width: 90,
-            renderCell: params => (
-                <Link to={'/criar_ficha'}>
-                    <IconButton aria-label="Criar Ficha">
-                        <CreateNewFolderIcon color="secondary"/>
-                    </IconButton>
-                </Link>
-            )
-        },
-
-
+        
+        
         {
             field: '_edit',
             headerName: 'Editar',
@@ -60,7 +45,22 @@ export default function CustomerList() {
                 </Link>
             )
         },
-
+        {
+            field: '_training',
+            headerName: 'Criar Ficha',
+            headerAlign: 'center',
+            align: 'center',
+            sortable: 'false',
+            width: 90,
+            renderCell: params => (
+                <Link to={'/criar_ficha'}>
+                    <IconButton aria-label="Criar Ficha" onClick={() => handleCreateFichaButtonClick(params.row.name, params.id)}>
+                        <CreateNewFolderIcon color="secondary"/>
+                    </IconButton>
+                </Link>
+            )
+        },
+        
         {
             field: '_delete',
             headerName: 'Excluir',
@@ -74,8 +74,10 @@ export default function CustomerList() {
                 </IconButton>
             )
         },
-
+        
     ];
+
+    
     // Estado inicial do componente, contendo os clientes e o indicador de espera
     const [state, setState] = useState({
         customers: [],
@@ -137,6 +139,11 @@ export default function CustomerList() {
             console.error('Erro obtendo dados:', error)
             setState({ ...state, showWaiting: false })
         }
+    }
+    //salva o nome e o id do cliente no localstorage para criação da ficha
+    function handleCreateFichaButtonClick(name, id) {
+        localStorage.setItem('name', name);
+        localStorage.setItem('customerId', id)
     }
 
     async function handleDeleteButtonClick(id) {
