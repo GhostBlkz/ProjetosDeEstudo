@@ -38,7 +38,7 @@ export default function CustomerList() {
             sortable: 'false',
             width: 90,
             renderCell: params => (
-                <Link to={`./${params.id}`}>
+                <Link to={`/cadastrar_cliente/${params.id}`}>
                     <IconButton aria-label="Editar">
                         <EditIcon color="secondary"/>
                     </IconButton>
@@ -156,7 +156,7 @@ export default function CustomerList() {
                 //recarrega grid
                 fetchData()
 
-                alert('Item Inativado com sucesso.')
+                alert('Cliente Inativado com sucesso.')
                 //esconde backdrop
                 setState({ ...state, showWaiting: false })
 
@@ -180,7 +180,7 @@ export default function CustomerList() {
                 textAlign: 'center',
 
             }}>
-                Listagem de clientes
+                Lista de clientes
             </Typography>
 
             <Box sx={{
@@ -209,7 +209,7 @@ export default function CustomerList() {
                     maxWidth: '100%',
                     margin: 'auto',
                 }}>
-                <Box sx={{ height: 400, width: '100%' }}>
+                <Box sx={{ height: 600, width: '100%' }}>
                     <DataGrid
                         rows={state.customers}
                         columns={columns}
@@ -217,7 +217,7 @@ export default function CustomerList() {
                         initialState={{
                             pagination: {
                                 paginationModel: {
-                                    pageSize: 5,
+                                    pageSize: 7,
                                 },
                             },
                         }}

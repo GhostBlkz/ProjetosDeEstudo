@@ -1,6 +1,7 @@
 import React from 'react'
 import InputMask from 'react-input-mask'
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Paper, TextField, Grid, Button, Box, Alert, MenuItem } from '@mui/material'
 import CreateIcon from '@mui/icons-material/Create';
 import validaCPF from '../lib/ValidaCpf'
@@ -8,6 +9,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Waiting from '../ui/Waiting';
 import axios from 'axios';
+
+import useConfirmDialog from '../ui/useConfirmDialog';
+import useNotification from '../ui/useNotification';
 
 
 
@@ -19,11 +23,56 @@ const isEmail = (email) => //função que valida emails
 const validarCPF = validaCPF
 export default function CustomerEnrollmentPage() {
 
-  const [formValid, setFormValid] = useState()
+  const [formValid, setFormValid] = useState('')
   const [emailError, setEmailError] = useState(false);
   const [cpfError, setCpfError] = useState(false)
   const [erroGenerico, setErroGenerico] = useState(false)
-  const [success, setSuccess] = useState(false)
+  
+
+  //criando o formulario que sera enviado ao backend
+  const [formData, setFormData] = useState({
+    name: '',
+    cpf: '',
+    gender: '',
+    birthDate: '',
+
+    addresses: {
+      city: '',
+      state: '',
+      neighbourhood: '',
+      street: '',
+      addressNumber: '',
+      zipCode: '',
+
+    },
+    contact: {
+      email: '',
+      phoneNumber: ''
+
+    },
+    enrollment: {
+      planDescription: '',
+      status: '',
+    },
+  }
+  );
+  const [state, setState] = useState({
+    formModified: false,
+    showWaiting: false
+  })
+
+  const { formModified, showWaiting } = state
+
+  const params = useParams()
+  const navigate = useNavigate()
+
+  const { askForConfirmation, ConfirmDialog } = useConfirmDialog();
+  const { notify, Notification } = useNotification();
+
+
+
+
+
 
   //opções de seleção de genero
   const genders = [
@@ -77,43 +126,45 @@ export default function CustomerEnrollmentPage() {
     { value: 'SE', label: 'Sergipe' },
     { value: 'TO', label: 'Tocantins' }
   ]
+  let formatedDate = formData.birthDate.split('/').reverse().join('-');
+  const data  =  {
+    name: formData.name,
+    cpf: formData.cpf,
+    birthDate: formatedDate,
+    addresses: [
+      {
+        city: formData.addresses.city,
+        state: formData.addresses.state,
+        neighbourhood: formData.addresses.neighbourhood,
+        street: formData.addresses.street,
+        addressNumber: formData.addresses.addressNumber,
+        zipCode: formData.addresses.zipCode
+      }
+    ],
+    contact: [
+      {
+        email: formData.contact.email,
+        phoneNumber: formData.contact.phoneNumber
+      }
+    ],
+    enrollment: [
+      {
+        planDescription: formData.enrollment.planDescription,
+        status: formData.enrollment.status
+      }
+    ],
 
-
-
-
-  //criando o formulario que sera enviado ao backend
-  const [formData, setFormData] = useState({
-    name: '',
-    cpf: '',
-    gender: '',
-    birthDate: '',
-
-    addresses: {
-      city: '',
-      state: '',
-      neighbourhood: '',
-      street: '',
-      addressNumber: '',
-      zipCode: '',
-
-    },
-    contact: {
-      email: '',
-      phoneNumber: ''
-
-    },
-    enrollment: {
-      planDescription: '',
-      status: '',
-    },
   }
-  );
+
+
+
+
+
 
   //Backdrop de espera
-  const [state, setState] = React.useState({
-    showWaiting: false
-  })
-  const { showWaiting } = state
+
+
+
 
   //lida com a validação do email
   const handleEmail = () => {
@@ -122,7 +173,6 @@ export default function CustomerEnrollmentPage() {
       return;
     }
     setEmailError(false)
-    setFormValid("")
   }
   //lida com a validação do cpf
   const handleCpf = () => {
@@ -131,7 +181,6 @@ export default function CustomerEnrollmentPage() {
       return;
     }
     setCpfError(false)
-    setFormValid("")
   }
   //lida com os campos requeridos
   const handleErroGenerico = () => {
@@ -142,7 +191,6 @@ export default function CustomerEnrollmentPage() {
       return
     }
     setErroGenerico(false)
-    setFormValid("")
   }
   //lida com a inserção da data de nascimento
   const handleBirthdate = (e) => {
@@ -163,7 +211,7 @@ export default function CustomerEnrollmentPage() {
     }
   };
   // formata a data para o backend com YYYY-MM-DD
-  let dataFormatada = formData.birthDate.split('/').reverse().join('-');
+
 
 
 
@@ -205,6 +253,7 @@ export default function CustomerEnrollmentPage() {
         },
       }));
     }
+    setState({ ...state, data: formData, formModified: true })
   };
 
 
@@ -226,60 +275,32 @@ export default function CustomerEnrollmentPage() {
   };
 
 
+
+
+
+
   // Função para lidar com a submissão do formulário
   async function handleSubmit(e) {
     e.preventDefault();
 
     if (cpfError || !formData.cpf) {
-      setFormValid("CPF invalido")
-      setSuccess(false)
+      notify('CPF invalido','error',3000)
       return
     }
 
     if (emailError || !formData.contact.email) {
-      setFormValid("Email invalido")
-      setSuccess(false)
+      notify('Email invalido','error',3000)
+
+      
       return
     }
     if (erroGenerico) {
-      setFormValid("Preencha todos os campos requeridos")
-      setSuccess(false)
+      notify('Preencha todos os campos','error',3000)
+
+      
       return
     }
 
-
-    console.log(formData);
-
-    // Declarar uma nova variável dados com state e atribuir o objeto
-    const data = {
-      name: formData.name,
-      cpf: formData.cpf,
-      birthDate: dataFormatada,
-      addresses: [
-        {
-          city: formData.addresses.city,
-          state: formData.addresses.state,
-          neighbourhood: formData.addresses.neighbourhood,
-          street: formData.addresses.street,
-          addressNumber: formData.addresses.addressNumber,
-          zipCode: formData.addresses.zipCode
-        }
-      ],
-      contact: [
-        {
-          email: formData.contact.email,
-          phoneNumber: formData.contact.phoneNumber
-        }
-      ],
-      enrollment: [
-        {
-          planDescription: formData.enrollment.planDescription,
-          status: formData.enrollment.status
-        }
-      ],
-
-    }
-    console.log(data)
 
     // Criar a constante com os dados do cabeçalho
     const headers = {
@@ -290,59 +311,98 @@ export default function CustomerEnrollmentPage() {
     };
 
     setState({ ...state, showWaiting: true })
-    axios.post('http://localhost:8080/customer', data, headers)
-      .then((response) => {  // Acessa o then quando a API retornar status 200
-
-        setSuccess(true)
-        setState({ ...state, showWaiting: false })
+    try {
+      if (params.id){ 
+        await axios.put(`http://localhost:8080/customer/${params.id}`, data, headers)
+        .then(() => {
+          notify('Cliente atualizado com sucesso.', 'success', 2000, () => {
+            navigate('/clientes', { replace: true });
+          });
+          console.log(data)
+          
+        })
+      }
+      else await axios.post(`http://localhost:8080/customer`, data, headers)
+      .then(() => {
+        notify('Cliente registrado com sucesso.', 'success', 2000, () => {
+          navigate('/clientes', { replace: true });
+        });
+        
       })
-      .catch((err) => {
-        setSuccess(false)
-        console.log('Log de erro: ' + err)
+    }
+    catch (error) {
+      console.error(error)
 
-        if (err.response) {
-          setFormValid(err.response.data.message)
-          setState({ ...state, showWaiting: false })
-
-        } else {
-          setFormValid("Ocorreu um erro")
-          setState({ ...state, showWaiting: false })
-
-        }
-      })
+      notify(error.message, 'error')
+    }
+    finally {
+      setState({ ...state, showWaiting: false })
+    }
 
   };
 
-  function handleVoltar() {
-    window.location.href = "/clientes"
+  async function handleVoltar() {
+    if (formModified && 
+      ! await askForConfirmation('Tem certeza que deseja sair sem salvar as alterações?'))
+      return 
+
+      navigate('/clientes')
+    
   }
 
-  //seta um timeout para o alert de erro
+  
+
   useEffect(() => {
-    if (formValid) {
-      const formValidTimeout = setTimeout(() => {
-        setFormValid(false);
-      }, 2000);
+    if(params.id) loadData()
+  }, [])
 
-      return () => clearTimeout(formValidTimeout);
+  async function loadData(){
+    setState({ ...state, showWaiting: true })
+    try{
+      const result = await axios.get(`http://localhost:8080/customer/${params.id}`)
+      const data = result.data
+      let formatedData = data.birthDate.split('-').reverse().join('/')
+      
+
+      setFormData({
+        name: data.name,
+        cpf: data.cpf,
+        gender: data.gender,
+        birthDate: formatedData,
+        addresses: {
+          city: data.addresses[0].city,
+          state: data.addresses[0].state,
+          neighbourhood: data.addresses[0].neighbourhood,
+          street: data.addresses[0].street,
+          addressNumber: data.addresses[0].addressNumber,
+          zipCode: data.addresses[0].zipCode,
+        },
+        contact: {
+          email: data.contact[0].email,
+          phoneNumber: data.contact[0].phoneNumber,
+        },
+        enrollment: {
+          planDescription: data.enrollment[0].planDescription,
+          status: data.enrollment[0].status,
+        },
+      });
+
+    }catch(error){
+      console.error(error)
+      notify(error.message, 'error')
     }
-  }, [formValid]);
-
-  //seta um timeout para o alert de sucesso
-  useEffect(() => {
-    if (success) {
-      const successTimeout = setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
-
-      return () => clearTimeout(successTimeout);
+    finally{
+      setState({ ...state, showWaiting: false })
     }
-  }, [success]);
+  }
 
   return (
 
     <>
       <Waiting show={showWaiting} />
+      <ConfirmDialog/>
+      <Notification/>
+
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
         <Paper elevation={6}
           sx={{
@@ -401,7 +461,6 @@ export default function CustomerEnrollmentPage() {
                   name="birthDate"
                   label="Data de Nascimento"
                   helperText="DD/MM/YYYY"
-                  inputVariant="outlined"
                   fullWidth
                   value={formData.birthDate}
                   onChange={handleBirthdate}
@@ -625,7 +684,9 @@ export default function CustomerEnrollmentPage() {
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, padding: '0 24px', mb: 3 }}>
               <Button type="submit" onClick={handleSubmit} variant="contained" color="primary" sx={{ width: 'auto' }} endIcon={<CreateIcon />}>
-                Cadastrar
+                <Typography >
+                  {params.id ? `Editar cliente #${params.id}` : 'Cadastrar novo cliente'}
+                </Typography>
               </Button>
               <Button variant="contained" onClick={handleVoltar} color="secondary" sx={{ width: 'auto' }}>
                 Voltar
@@ -633,13 +694,6 @@ export default function CustomerEnrollmentPage() {
             </Box>
 
           </form>
-          {formValid && (<Alert severity="error" sx={{ textAlign: 'center', margin: 'auto', width: '100%' }}>
-            {formValid}
-          </Alert>)}
-
-          {success && (<Alert severity="success" sx={{ textAlign: 'center', margin: 'auto', width: '100%' }}>
-            {"Cadastro realizado com sucesso"}
-          </Alert>)}
 
         </Paper>
       </LocalizationProvider>

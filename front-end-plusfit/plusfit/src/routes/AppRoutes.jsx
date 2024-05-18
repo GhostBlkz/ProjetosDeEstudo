@@ -13,6 +13,8 @@ export default function AppRoutes() {
       <Route path="/" element={ <HomePage /> } />
       <Route path="/criar_ficha" element={ <CustomTraingPage /> } />
       <Route path="/cadastrar_cliente" element={ <CustomerEnrollmentPage /> } />
+      <Route path="/cadastrar_cliente/:id" element={ <CustomerEnrollmentPage /> } />
+
       <Route path="/login" element={ <LoginPage /> } />
       <Route path="/clientes" element={ <CustomerList /> } />
     </Routes>
