@@ -89,6 +89,14 @@ export default function CustomerList() {
                                 Dados da Matricula
                             </MenuItem>
 
+                            <MenuItem
+                                component={Link}
+                                to={`/atualizar_endereco/${params.id}`}
+                                onClick={handleClose}>
+                                Endereços
+                            </MenuItem>
+
+
 
                         </Menu>
                     </>

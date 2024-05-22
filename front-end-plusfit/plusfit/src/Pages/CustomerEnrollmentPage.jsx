@@ -312,19 +312,9 @@ export default function CustomerEnrollmentPage() {
 
     setState({ ...state, showWaiting: true })
     try {
-      if (params.id){ 
-        await axios.put(`http://localhost:8080/customer/${params.id}`, data, headers)
-        .then(() => {
-          notify('Cliente atualizado com sucesso.', 'success', 2000, () => {
-            navigate('/clientes', { replace: true });
-          });
-          console.log(data)
-          
-        })
-      }
-      else await axios.post(`http://localhost:8080/customer`, data, headers)
+       await axios.post(`http://localhost:8080/customer`, data, headers)
       .then(() => {
-        notify('Cliente registrado com sucesso.', 'success', 2000, () => {
+        notify('Cliente registrado com sucesso.', 'success', 500, () => {
           navigate('/clientes', { replace: true });
         });
         

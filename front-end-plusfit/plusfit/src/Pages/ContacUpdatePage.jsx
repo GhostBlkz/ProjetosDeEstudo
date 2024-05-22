@@ -49,7 +49,11 @@ export default function ContactUpdatePage() {
                 ...prevState.contact,
                 phoneNumber: formattedValue,
             },
-        }));
+            
+        }
+        
+    ));
+    setState({ ...state, data: formData, formModified: true })
     }
     const handleEmail = () => {
         if (!isEmail(formData.email) || !formData.email) {
@@ -67,6 +71,7 @@ export default function ContactUpdatePage() {
             ...prevState,
             [name]: value,
         }));
+        setState({ ...state, data: formData, formModified: true })
     };
     async function handleVoltar() {
         if (formModified && 
@@ -98,12 +103,12 @@ export default function ContactUpdatePage() {
 
         setState({ ...state, showWaiting: true })
         try {
-            await axios.put(`http://localhost:8080/customer/contact/${params.id}`, data, headers)
+            await axios.put(`http://localhost:8080/customer/${params.id}/contact/${params.id}`, formData, headers)
                 .then(() => {
-                    notify('Cliente atualizado com sucesso.', 'success', 2000, () => {
+                    notify('Cliente atualizado com sucesso.', 'success', 500, () => {
                         navigate('/clientes', { replace: true });
                     });
-                    console.log(data)
+                    console.log(formData)
 
                 })
 
@@ -217,7 +222,7 @@ export default function ContactUpdatePage() {
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3, padding: '0 24px', mb: 3 }}>
                         <Button type="submit" onClick={handleSubmit} variant="contained" color="primary" sx={{ width: 'auto' }} endIcon={<CreateIcon />}>
                             <Typography>
-                                "Editar Contato"
+                                Editar Contato
                             </Typography>
                         </Button>
 
