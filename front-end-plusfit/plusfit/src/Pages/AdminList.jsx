@@ -22,6 +22,23 @@ export default function AdminList() {
 
 
         {
+            field: '_edit',
+            headerName: 'Editar',
+            headerAlign: 'center',
+            align: 'center',
+            sortable: 'false',
+            width: 90,
+            renderCell: params => (
+                <Link to={`/login/${params.id}`}>
+                    <IconButton aria-label="Editar">
+                        <EditIcon color="secondary"/>
+                    </IconButton>
+                </Link>
+            )
+        },
+
+
+        {
             field: '_delete',
             headerName: 'Excluir',
             headerAlign: 'center',

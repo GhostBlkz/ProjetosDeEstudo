@@ -1,9 +1,11 @@
 
-
+import { Paper, Typography } from '@mui/material'
 export default function AddressUpdatePage() {
     return (
-        <div>
-            <h1>Endereços</h1>
-        </div>
+        <Paper>
+            <Typography variant="h3">
+                Pagina de atualizacao de Endereco
+            </Typography>
+        </Paper>
     )
 }

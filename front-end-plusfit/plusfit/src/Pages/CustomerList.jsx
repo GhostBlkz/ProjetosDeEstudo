@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom'
 
-import { Typography, Box, Paper, IconButton, Button } from "@mui/material";
+import { Typography, Box, Paper, IconButton, Button, Menu, MenuItem } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
@@ -27,9 +27,9 @@ export default function CustomerList() {
         { field: 'phoneNumber', headerName: 'Telefone', width: 120 },
         { field: 'email', headerName: 'E-mail', width: 230 },
         { field: 'status', headerName: 'Plano', width: 70 },
-        
-        
-        
+
+
+
         {
             field: '_edit',
             headerName: 'Editar',
@@ -37,13 +37,68 @@ export default function CustomerList() {
             align: 'center',
             sortable: 'false',
             width: 90,
-            renderCell: params => (
-                <Link to={`/cadastrar_cliente/${params.id}`}>
-                    <IconButton aria-label="Editar">
-                        <EditIcon color="secondary"/>
-                    </IconButton>
-                </Link>
-            )
+            renderCell: params => {
+                const [anchorEl, setAnchorEl] = useState(null);
+                const open = Boolean(anchorEl);
+
+                const handleClick = (event) => {
+                    setAnchorEl(event.currentTarget);
+                };
+                const handleClose = () => {
+                    setAnchorEl(null);
+                };
+                return (
+                    <>
+                        <IconButton
+                            aria-label="Editar"
+                            aria-controls={open ? 'edit-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
+                            onClick={handleClick}
+                            >
+                       
+                            <EditIcon color="secondary" />
+                        </IconButton>
+                        <Menu
+                            id="edit-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'edit-menu',
+                            }}
+                        >
+                            <MenuItem
+                                component={Link}
+                                to={`/cadastrar_cliente/${params.id}`}
+                                onClick={handleClose}>
+                                Dados do Cliente
+                            </MenuItem>
+
+                            <MenuItem
+                                component={Link}
+                                to={`/atualizar_contatos/${params.id}`}
+                                onClick={handleClose}>
+                                Contatos
+                            </MenuItem>
+
+                            <MenuItem
+                                component={Link}
+                                to={`/atualizar_matricula/${params.id}`}
+                                onClick={handleClose}>
+                                Dados da Matricula
+                            </MenuItem>
+
+
+                        </Menu>
+                    </>
+                )
+
+
+
+
+            }
+
         },
         {
             field: '_training',
@@ -55,12 +110,12 @@ export default function CustomerList() {
             renderCell: params => (
                 <Link to={'/criar_ficha'}>
                     <IconButton aria-label="Criar Ficha" onClick={() => handleCreateFichaButtonClick(params.row.name, params.id)}>
-                        <CreateNewFolderIcon color="secondary"/>
+                        <CreateNewFolderIcon color="secondary" />
                     </IconButton>
                 </Link>
             )
         },
-        
+
         {
             field: '_delete',
             headerName: 'Excluir',
@@ -74,10 +129,10 @@ export default function CustomerList() {
                 </IconButton>
             )
         },
-        
+
     ];
 
-    
+
     // Estado inicial do componente, contendo os clientes e o indicador de espera
     const [state, setState] = useState({
         customers: [],
@@ -118,18 +173,18 @@ export default function CustomerList() {
                 const formattedStatus = statusMapping[status] || status;
 
                 return {
-                customerId: customer.customerId,
-                name: customer.name,
-                cpf: customer.cpf,
-                active: customer.active ? 'Ativo' : 'Inativo',
-                address: customer.addresses.length > 0 ? customer.addresses[0].street : '',
-                addressNumber: customer.addresses.length > 0 ? customer.addresses[0].addressNumber : '',
-                phoneNumber: customer.contact.length > 0 ? customer.contact[0].phoneNumber : '',
-                email: customer.contact.length > 0 ? customer.contact[0].email : '',
-                status: formattedStatus
+                    customerId: customer.customerId,
+                    name: customer.name,
+                    cpf: customer.cpf,
+                    active: customer.active ? 'Ativo' : 'Inativo',
+                    address: customer.addresses.length > 0 ? customer.addresses[0].street : '',
+                    addressNumber: customer.addresses.length > 0 ? customer.addresses[0].addressNumber : '',
+                    phoneNumber: customer.contact.length > 0 ? customer.contact[0].phoneNumber : '',
+                    email: customer.contact.length > 0 ? customer.contact[0].email : '',
+                    status: formattedStatus
 
                 }
-                
+
             });
             // Atualiza o estado com os clientes formatados e remove o indicador de espera
             setState({ ...state, customers: formattedCustomers, showWaiting: false })
