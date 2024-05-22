@@ -17,7 +17,9 @@ export default function AppRoutes() {
       <Route path="/criar_ficha" element={ <CustomTraingPage /> } />
       <Route path="/cadastrar_cliente" element={ <CustomerEnrollmentPage /> } />
       <Route path="/cadastrar_cliente/:id" element={ <CustomerEnrollmentPage /> } />
+      <Route path='/atualizar_contatos' element={ <ContactUpdatePage /> } />
       <Route path='/atualizar_contatos/:id' element={ <ContactUpdatePage /> } />
+      <Route path='/atualizar_matricula' element={ <EnrollmentUpdate /> } />
       <Route path='/atualizar_matricula/:id' element={ <EnrollmentUpdate /> } />
       <Route path="/login" element={ <LoginPage /> } />
       <Route path="/clientes" element={ <CustomerList /> } />

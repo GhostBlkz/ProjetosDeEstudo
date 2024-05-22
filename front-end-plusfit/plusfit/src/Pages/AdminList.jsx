@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom'
 import { Typography, Box, Paper, IconButton, Button } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
-import AddBoxIcon from '@mui/icons-material/AddBox'
 
 import { DataGrid } from "@mui/x-data-grid";
 
@@ -66,7 +64,7 @@ export default function AdminList() {
     });
 
     const {
-        customers,
+        admins,
         showWaiting
     } = state
 
@@ -99,7 +97,7 @@ export default function AdminList() {
 
         }
         catch(error){
-            console.error(error)
+            console.error('Erro obtendo dados:',error)
             setState({ ...state, showWaiting: true })
 
         }

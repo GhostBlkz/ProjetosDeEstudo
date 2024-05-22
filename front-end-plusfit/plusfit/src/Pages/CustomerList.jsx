@@ -276,7 +276,7 @@ export default function CustomerList() {
                                 },
                             },
                         }}
-                        pageSizeOptions={[5]}
+                        pageSizeOptions={[7]}
                     />
                 </Box>
             </Paper>

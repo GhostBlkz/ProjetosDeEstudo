@@ -77,15 +77,15 @@ export default function CustomerEnrollmentPage() {
   //opções de seleção de genero
   const genders = [
     {
-      value: 'Male',
+      value: 'MALE',
       label: 'Masculino',
     },
     {
-      value: 'Female',
+      value: 'FEMALE',
       label: 'Feminino',
     },
     {
-      value: 'Other',
+      value: 'OTHER',
       label: 'Outro',
     }
   ]
@@ -161,7 +161,7 @@ export default function CustomerEnrollmentPage() {
 
 
 
-  //Backdrop de espera
+
 
 
 
