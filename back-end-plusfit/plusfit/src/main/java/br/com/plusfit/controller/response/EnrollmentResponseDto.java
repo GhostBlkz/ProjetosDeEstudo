@@ -11,10 +11,12 @@ public class EnrollmentResponseDto {
     private Long enrollmentId;
     private String planDescription;
     private String status;
+    private Boolean active;
 
     public EnrollmentResponseDto (final Enrollment enrollment) {
         this.enrollmentId = enrollment.getEnrollmentId();
         this.planDescription = enrollment.getPlanDescription();
         this.status = enrollment.getStatus().description;
+        this.active = enrollment.getActive();
     }
 }

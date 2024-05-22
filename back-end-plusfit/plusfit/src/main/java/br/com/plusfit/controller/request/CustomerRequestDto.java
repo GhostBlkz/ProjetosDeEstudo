@@ -17,7 +17,6 @@ import java.util.UUID;
 public class CustomerRequestDto {
 
     private Long customerId;
-    private String customerCode;
     private String name;
     private String cpf;
     private LocalDate birthDate;
@@ -27,7 +26,6 @@ public class CustomerRequestDto {
 
     public CustomerRequestDto(final Customer customer) {
         this.customerId = customer.getCustomerId();
-        this.customerCode = customer.getCustomerCode();
         this.name = customer.getName();
         this.cpf = customer.getCpf();
         this.birthDate = customer.getBirthDate();

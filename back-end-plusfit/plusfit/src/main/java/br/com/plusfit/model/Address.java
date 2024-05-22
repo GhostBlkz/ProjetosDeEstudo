@@ -45,7 +45,7 @@ public class Address {
     @Column(name="num_version")
     private Integer version;
 
-    @Column(name="dat_creation")
+    @Column(name="dat_creation", updatable = false)
     private LocalDateTime creationDate;
 
     @Column(name="dat_update")

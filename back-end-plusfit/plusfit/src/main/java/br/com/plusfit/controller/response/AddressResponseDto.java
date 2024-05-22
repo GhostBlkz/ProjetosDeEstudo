@@ -15,6 +15,7 @@ public class AddressResponseDto {
     private String street;
     private Integer addressNumber;
     private Integer zipCode;
+    private Boolean active;
 
     public AddressResponseDto (final Address address) {
         this.addressId = address.getAddressId();
@@ -24,5 +25,6 @@ public class AddressResponseDto {
         this.street = address.getStreet();
         this.addressNumber = address.getAddressNumber();
         this.zipCode = address.getZipCode();
+        this.active = address.getActive();
     }
 }

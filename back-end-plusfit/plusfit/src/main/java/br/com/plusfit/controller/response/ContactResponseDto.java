@@ -8,10 +8,12 @@ public class ContactResponseDto {
     private Long contactId;
     private String email;
     private Long phoneNumber;
+    private Boolean active;
 
     public ContactResponseDto (Contact contact) {
         this.contactId = contact.getContactId();
         this.email = contact.getEmail();
         this.phoneNumber = contact.getPhoneNumber();
+        this.active = contact.getActive();
     }
 }
