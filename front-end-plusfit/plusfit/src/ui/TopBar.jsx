@@ -28,7 +28,7 @@ export default function TopBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" enableColorOnDark>
+      <AppBar position="static" enableColorOnDark className='app-bar'>
         <Toolbar>
           <MainMenu />
           <Box sx={{ flexGrow: 1 }}>

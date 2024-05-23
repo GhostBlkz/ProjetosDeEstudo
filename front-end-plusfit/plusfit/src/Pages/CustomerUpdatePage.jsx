@@ -18,6 +18,7 @@ export default function CustomerUpdatePage() {
 
     const [cpfError, setCpfError] = useState(false)
     const [erroGenerico, setErroGenerico] = useState(false)
+    const [originalBirthDate, setOriginalBirthDate] = useState('');
 
     const [formData, setFormData] = useState({
         name: '',
@@ -41,15 +42,15 @@ export default function CustomerUpdatePage() {
 
     const genders = [
         {
-            value: 'MALE',
+            value: 'Male',
             label: 'Masculino',
         },
         {
-            value: 'FEMALE',
+            value: 'Female',
             label: 'Feminino',
         },
         {
-            value: 'OTHER',
+            value: 'Other',
             label: 'Outro',
         }
     ]
@@ -114,26 +115,26 @@ export default function CustomerUpdatePage() {
         };
 
         setState({ ...state, showWaiting: true })
-        try {
 
-            await axios.put(`http://localhost:8080/customer/${params.id}`, formData, headers)
-                .then(() => {
-                    notify('Cliente atualizado com sucesso.', 'success', 500, () => {
-                        navigate('/clientes', { replace: true });
-                    });
-                    console.log(formData)
+        
+        formData.birthDate = originalBirthDate
+        
+        console.log("Aqui", formData)         
+        await axios.put(`http://localhost:8080/customer/${params.id}`, formData, headers)
+            .then(() => {
+                notify('Cliente atualizado com sucesso.', 'success', 500, () => {
+                    navigate('/clientes', { replace: true });
+                });
 
-                })
-        }
+            }).catch(error => {
+                console.error(error);
+                notify(error.message, 'error');
+            })
+            .finally(() => {
+                setState({ ...state, showWaiting: false })
+            });
 
-        catch (error) {
-            console.error(error)
 
-            notify(error.message, 'error')
-        }
-        finally {
-            setState({ ...state, showWaiting: false })
-        }
     }
 
     const handleChange = (e) => {
@@ -164,9 +165,11 @@ export default function CustomerUpdatePage() {
         try {
             const result = await axios.get(`http://localhost:8080/customer/${params.id}`)
             const data = result.data
+            setOriginalBirthDate(data.birthDate)
             let dateParts = data.birthDate.split('-')
             let formatedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`
-    
+
+
 
 
             setFormData({

@@ -14,8 +14,10 @@ export default function EnrollmentUpdate() {
     const [formData, setFormData] = useState({
         planDescription: '',
         status: ''
-    }
-    )
+    })
+
+  
+    
 
 
     const [state, setState] = useState({
@@ -38,6 +40,7 @@ export default function EnrollmentUpdate() {
         { value: 'SUSPENDED', label: 'Suspenso' }
     ]
 
+    
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -49,16 +52,16 @@ export default function EnrollmentUpdate() {
                 'Content-Type': 'application/json'
             }
         };
-
+        console.log("formData ",formData)
         setState({ ...state, showWaiting: true })
+        
         try {
-
             await axios.put(`http://localhost:8080/customer/${params.id}/enrollment/${params.id}`, formData, headers)
                 .then(() => {
                     notify('Cliente atualizado com sucesso.', 'success', 500, () => {
                         navigate('/clientes', { replace: true });
                     });
-                    console.log(formData)
+                    
 
                 })
         }
@@ -75,15 +78,19 @@ export default function EnrollmentUpdate() {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-
+        const { name, value } = e.target
         // Atualiza o estado com o novo valor do campo alterado
         setFormData(prevState => ({
             ...prevState,
             [name]: value,
         }));
+        
         setState({ ...state, data: formData, formModified: true })
+        
     };
+        
+        
+   
 
     async function handleVoltar() {
         if (formModified &&
@@ -161,7 +168,6 @@ export default function EnrollmentUpdate() {
                                 select
                                 label="Status do Plano"
                                 variant="outlined"
-                                defaultValue={""}
                                 value={formData.status}
                                 onChange={handleChange}
                                 fullWidth

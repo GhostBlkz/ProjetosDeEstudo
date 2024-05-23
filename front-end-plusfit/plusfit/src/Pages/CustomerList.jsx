@@ -190,7 +190,6 @@ export default function CustomerList() {
                     phoneNumber: customer.contact.length > 0 ? customer.contact[0].phoneNumber : '',
                     email: customer.contact.length > 0 ? customer.contact[0].email : '',
                     status: formattedStatus
-
                 }
 
             });

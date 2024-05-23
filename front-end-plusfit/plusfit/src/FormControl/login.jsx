@@ -189,7 +189,7 @@ export default function FormLogin() {
             }
         })
         //muda de pagina apos login bem sucedido
-        if(status === "success") navigate('/criar_ficha')
+        if(status === "success") navigate('/')
         }
 
 

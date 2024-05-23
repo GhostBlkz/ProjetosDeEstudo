@@ -45,16 +45,15 @@ export default function ContactUpdatePage() {
 
         setFormData(prevState => ({
             ...prevState,
-            contact: {
-                ...prevState.contact,
-                phoneNumber: formattedValue,
-            },
+            phoneNumber: formattedValue,
+            }))
             
+            setState({ ...state, data: formData, formModified: true })
         }
+    
         
-    ));
-    setState({ ...state, data: formData, formModified: true })
-    }
+  
+    
     const handleEmail = () => {
         if (!isEmail(formData.email) || !formData.email) {
             setEmailError(true)
@@ -108,7 +107,7 @@ export default function ContactUpdatePage() {
                     notify('Cliente atualizado com sucesso.', 'success', 500, () => {
                         navigate('/clientes', { replace: true });
                     });
-                    console.log(formData)
+                    
 
                 })
 

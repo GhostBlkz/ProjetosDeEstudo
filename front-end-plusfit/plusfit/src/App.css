@@ -7,6 +7,12 @@ body{
   background-attachment: fixed; /* Isso garante que a imagem de fundo permaneça fixa enquanto a página é rolada */
   background-color: rgba(9, 23, 29, 0); /* Cor de fundo com opacidade */
   background-position: center;
+
+  
+}
+
+.app-bar{
+  z-index: 20;
 }
 
 .Login2{
@@ -31,3 +37,4 @@ body{
 .MuiDataGrid-row:hover button {
   visibility: visible;
 }
+

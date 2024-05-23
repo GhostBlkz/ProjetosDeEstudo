@@ -98,7 +98,7 @@ export default function AdminList() {
         }
         catch(error){
             console.error('Erro obtendo dados:',error)
-            setState({ ...state, showWaiting: true })
+            setState({ ...state, showWaiting: false })
 
         }
     }

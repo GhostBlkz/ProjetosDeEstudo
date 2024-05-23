@@ -23,11 +23,10 @@ const isEmail = (email) => //função que valida emails
 const validarCPF = validaCPF
 export default function CustomerEnrollmentPage() {
 
-  const [formValid, setFormValid] = useState('')
   const [emailError, setEmailError] = useState(false);
   const [cpfError, setCpfError] = useState(false)
   const [erroGenerico, setErroGenerico] = useState(false)
-  
+
 
   //criando o formulario que sera enviado ao backend
   const [formData, setFormData] = useState({
@@ -57,11 +56,10 @@ export default function CustomerEnrollmentPage() {
   }
   );
   const [state, setState] = useState({
-    formModified: false,
     showWaiting: false
   })
 
-  const { formModified, showWaiting } = state
+  const { showWaiting } = state
 
   const params = useParams()
   const navigate = useNavigate()
@@ -77,15 +75,15 @@ export default function CustomerEnrollmentPage() {
   //opções de seleção de genero
   const genders = [
     {
-      value: 'MALE',
+      value: 'Male',
       label: 'Masculino',
     },
     {
-      value: 'FEMALE',
+      value: 'Female',
       label: 'Feminino',
     },
     {
-      value: 'OTHER',
+      value: 'Other',
       label: 'Outro',
     }
   ]
@@ -127,9 +125,10 @@ export default function CustomerEnrollmentPage() {
     { value: 'TO', label: 'Tocantins' }
   ]
   let formatedDate = formData.birthDate.split('/').reverse().join('-');
-  const data  =  {
+  const data = {
     name: formData.name,
     cpf: formData.cpf,
+    gender: formData.gender,
     birthDate: formatedDate,
     addresses: [
       {
@@ -284,20 +283,17 @@ export default function CustomerEnrollmentPage() {
     e.preventDefault();
 
     if (cpfError || !formData.cpf) {
-      notify('CPF invalido','error',3000)
+      notify('CPF invalido', 'error', 3000)
       return
     }
 
     if (emailError || !formData.contact.email) {
-      notify('Email invalido','error',3000)
-
-      
+      notify('Email invalido', 'error', 3000)
       return
     }
-    if (erroGenerico) {
-      notify('Preencha todos os campos','error',3000)
 
-      
+    if (erroGenerico) {
+      notify('Preencha todos os campos', 'error', 3000)
       return
     }
 
@@ -309,89 +305,41 @@ export default function CustomerEnrollmentPage() {
         'Content-Type': 'application/json'
       }
     };
+    console.log(data)
 
     setState({ ...state, showWaiting: true })
-    try {
-       await axios.post(`http://localhost:8080/customer`, data, headers)
-      .then(() => {
+
+    await axios.post(`http://localhost:8080/customer`, data, headers)
+      .then((response) => {
         notify('Cliente registrado com sucesso.', 'success', 500, () => {
           navigate('/clientes', { replace: true });
         });
-        
-      })
-    }
-    catch (error) {
-      console.error(error)
 
-      notify(error.message, 'error')
-    }
-    finally {
-      setState({ ...state, showWaiting: false })
-    }
+      }).catch((error) => {
+        notify(error.message, 'error');
+      })
+      .finally(() => {
+        setState({ ...state, showWaiting: false })
+      });
+
+
+
 
   };
 
   async function handleVoltar() {
-    if (formModified && 
-      ! await askForConfirmation('Tem certeza que deseja sair sem salvar as alterações?'))
-      return 
 
-      navigate('/clientes')
-    
+    navigate('/clientes')
+
   }
 
-  
-
-  useEffect(() => {
-    if(params.id) loadData()
-  }, [])
-
-  async function loadData(){
-    setState({ ...state, showWaiting: true })
-    try{
-      const result = await axios.get(`http://localhost:8080/customer/${params.id}`)
-      const data = result.data
-      let formatedData = data.birthDate.split('-').reverse().join('/')
-      
-
-      setFormData({
-        name: data.name,
-        cpf: data.cpf,
-        gender: data.gender,
-        birthDate: formatedData,
-        addresses: {
-          city: data.addresses[0].city,
-          state: data.addresses[0].state,
-          neighbourhood: data.addresses[0].neighbourhood,
-          street: data.addresses[0].street,
-          addressNumber: data.addresses[0].addressNumber,
-          zipCode: data.addresses[0].zipCode,
-        },
-        contact: {
-          email: data.contact[0].email,
-          phoneNumber: data.contact[0].phoneNumber,
-        },
-        enrollment: {
-          planDescription: data.enrollment[0].planDescription,
-          status: data.enrollment[0].status,
-        },
-      });
-
-    }catch(error){
-      console.error(error)
-      notify(error.message, 'error')
-    }
-    finally{
-      setState({ ...state, showWaiting: false })
-    }
-  }
 
   return (
 
     <>
       <Waiting show={showWaiting} />
-      <ConfirmDialog/>
-      <Notification/>
+      <ConfirmDialog />
+      <Notification />
 
       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en-gb">
         <Paper elevation={6}
