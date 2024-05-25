@@ -1,28 +1,36 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import logo from "../assets/logoGigantes2.png";
 import MainMenu from '../ui/MainMenu'
-import LoginPage from '../Pages/LoginPage';
 import { useNavigate } from 'react-router-dom';
 
 
 export default function TopBar() {
-  const [openLogin, setOpenLogin] = React.useState(true)
+  const [openLogin, setOpenLogin] = React.useState(false)
 
   const navigate = useNavigate()
+  //useEffect para que openLogin sempre seja false antes de clicar
+  // para evitar de setar ele para true depois voltar a pagina inicial e ter que apertar em login 2 vezes para a pagina abrir denovo
+  useEffect(() => {
+    setOpenLogin(false)
+  }, [openLogin])
+ 
   const handleLoginClick = () => {
-    setOpenLogin(!openLogin) //seta open login para o inverso , se for true para falso, se for falso para true
-   
-    if (openLogin){ //se for true vai para a pagina de login, se n vai para a pagina inicial
-      navigate("/login")
+    const newOpenLogin = !openLogin; //inverte o estado de openLogin
+    setOpenLogin(newOpenLogin);
+
+    // Navega para a página de login apenas se newOpenLogin for true
+    if (newOpenLogin) {
+      navigate("/login");
     }
-    else {navigate("/")}
-  }
+
+
+  };
+  
 
 
 
